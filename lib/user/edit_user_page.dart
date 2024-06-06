@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:project_kejaksaan/models/model_user.dart';
 import 'package:project_kejaksaan/user/list_user_page.dart'; // Update with your model path
@@ -33,12 +32,12 @@ class _EditUserPageState extends State<EditUserPage> {
     txtKtp.text = widget.currentUser.ktp;
     txtAlamat.text = widget.currentUser.alamat;
     _roleValue = widget.currentUser.role;
-
   }
+
   void _showCongratulationsDialog() {
     showDialog(
       context: context,
-      barrierDismissible: true, // Dialog dapat ditutup dengan mengetuk di luar area dialog
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -49,39 +48,40 @@ class _EditUserPageState extends State<EditUserPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                'assets/images/congratulation.png', // Ubah path gambar sesuai dengan direktori Anda
+                'assets/images/congratulation.png',
                 height: 200,
                 width: 200,
               ),
-              Text("Congratulations",
-                style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Jost',fontSize: 24),
+              Text(
+                "Congratulations",
+                style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Jost', fontSize: 24),
               ),
               SizedBox(height: 20),
-              Text("Your Account is Ready to Use",
+              Text(
+                "Your Account is Ready to Use",
                 style: TextStyle(fontFamily: 'Mulish'),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
               Image.asset(
-                'assets/images/loading.png', // Ubah path gambar sesuai dengan direktori Anda
+                'assets/images/loading.png',
                 height: 30,
                 width: 30,
               ),
             ],
           ),
-          actions: [], // Hapus semua tombol
+          actions: [],
         );
       },
     );
   }
-  void saveChanges(String newUsername, String newFullName, String newEmail,String newPhoneNumber,String newKtp,String newAlamat,String newRole) async {
-    // Validasi input sebelum menyimpan perubahan
+
+  void saveChanges(String newUsername, String newFullName, String newEmail, String newPhoneNumber, String newKtp, String newAlamat, String newRole) async {
     if (newUsername.isEmpty || newFullName.isEmpty || newEmail.isEmpty || newPhoneNumber.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('All fields are required')));
       return;
     }
 
-    // Validasi format email menggunakan regex
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(newEmail)) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid email format')));
@@ -99,7 +99,6 @@ class _EditUserPageState extends State<EditUserPage> {
         'ktp': newKtp,
         'alamat': newAlamat,
         'role': newRole,
-
       });
 
       var data = json.decode(response.body);
@@ -110,18 +109,15 @@ class _EditUserPageState extends State<EditUserPage> {
           widget.currentUser.email = newEmail;
           widget.currentUser.fullname = newFullName;
           widget.currentUser.phone_number = newPhoneNumber;
-
+          widget.currentUser.ktp = newKtp;
+          widget.currentUser.alamat = newAlamat;
+          widget.currentUser.role = newRole;
         });
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data['message'])));
-        Navigator.pop(context);
 
-        // Ganti halaman ke halaman profil yang diperbarui
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ListUserPage(currentUser: widget.currentUser)),
-        );
-        _showCongratulationsDialog(); // Call the method to show the dialog
+        Navigator.pop(context, widget.currentUser); // Pass the updated user back to the previous screen
+        _showCongratulationsDialog();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data['message'])));
       }
@@ -152,9 +148,7 @@ class _EditUserPageState extends State<EditUserPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
-                  // Handle avatar tap if needed
-                },
+                onTap: () {},
                 child: Stack(
                   children: [
                     CircleAvatar(
@@ -329,17 +323,17 @@ class _EditUserPageState extends State<EditUserPage> {
               SizedBox(height: 20),
               InkWell(
                 onTap: () {
-                    // Implement logic to save changes
-                    String newUsername = txtUsername.text;
-                    String newEmail = txtEmail.text; // Ambil nilai dari controller email
-                    String newFullName = txtFullname.text;
-                    String newPhoneNumber = txtPhoneNumber.text;
-                    String newKtp = txtKtp.text;
-                    String newAlamat = txtAlamat.text;
-                    String newRole = _roleValue;
+                  // Implement logic to save changes
+                  String newUsername = txtUsername.text;
+                  String newEmail = txtEmail.text;
+                  String newFullName = txtFullname.text;
+                  String newPhoneNumber = txtPhoneNumber.text;
+                  String newKtp = txtKtp.text;
+                  String newAlamat = txtAlamat.text;
+                  String newRole = _roleValue;
 
-                    // Panggil fungsi untuk menyimpan perubahan
-                    saveChanges(newUsername, newFullName, newEmail,newPhoneNumber,newKtp, newAlamat,newRole);
+                  // Call the function to save changes
+                  saveChanges(newUsername, newFullName, newEmail, newPhoneNumber, newKtp, newAlamat, newRole);
                 },
                 child: Container(
                   height: 60,
