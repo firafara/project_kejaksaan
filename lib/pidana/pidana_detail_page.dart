@@ -28,9 +28,9 @@ class _PidanaDetailPageState extends State<PidanaDetailPage> {
   Future<void> _downloadPdf(String type) async {
     String pdfUrl;
     if (type == 'laporan') {
-      pdfUrl = 'http://192.168.1.8/kejaksaan/${widget.pidana.laporan_pengaduan_pdf}';
+      pdfUrl = 'http://192.168.31.53/kejaksaan/${widget.pidana.laporan_pengaduan_pdf}';
     } else {
-      pdfUrl = 'http://192.168.1.8/kejaksaan/${widget.pidana.ktp_pdf}';
+      pdfUrl = 'http://192.168.31.53/kejaksaan/${widget.pidana.ktp_pdf}';
     }
 
     // Log the URL for debugging

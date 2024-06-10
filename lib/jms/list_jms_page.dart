@@ -49,17 +49,25 @@ class _ListJmsPageState extends State<ListJmsPage> {
   }
 
   Future<void> _fetchJms() async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/jms.php'));
+    final response =
+        await http.get(Uri.parse('http://192.168.31.53/kejaksaan/jms.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
-      setState(() {
-        _jmsList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
-        _filterJmsByRole();
-        _isLoading = false;
-      });
+      if (parsed['data'] != null) {
+        setState(() {
+          _jmsList =
+              List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+          _filterJmsByRole();
+          _isLoading = false;
+        });
 
-      for (var jms in _jmsList) {
-        await _fetchUserData(jms.user_id);
+        for (var jms in _jmsList) {
+          await _fetchUserData(jms.user_id);
+        }
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
       }
     } else {
       throw Exception('Failed to load pengaduan');
@@ -67,7 +75,8 @@ class _ListJmsPageState extends State<ListJmsPage> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(
+        Uri.parse('http://192.168.31.53/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -92,9 +101,10 @@ class _ListJmsPageState extends State<ListJmsPage> {
   }
 
   void _filterJmsByRole() {
-    if (role == 'Customer') {
+    if (role == 'User') {
       setState(() {
-        _filteredJmsList = _jmsList.where((jms) => jms.user_id == userId).toList();
+        _filteredJmsList =
+            _jmsList.where((jms) => jms.user_id == userId).toList();
       });
     } else {
       setState(() {
@@ -105,21 +115,26 @@ class _ListJmsPageState extends State<ListJmsPage> {
 
   void _filterJmsList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/jms.php'));
+      final response =
+          await http.get(Uri.parse('http://192.168.31.53/kejaksaan/jms.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
-        List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+        List<Datum> allData =
+            List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
         List<Datum> filteredData;
         if (query.isNotEmpty) {
-          filteredData = allData.where((jms) =>
-          jms.user_id.toLowerCase().contains(query.toLowerCase()) ||
-              jms.status.toLowerCase().contains(query.toLowerCase())).toList();
+          filteredData = allData
+              .where((jms) =>
+                  jms.user_id.toLowerCase().contains(query.toLowerCase()) ||
+                  jms.nama_pelapor.toLowerCase().contains(query.toLowerCase()))
+              .toList();
         } else {
           filteredData = allData;
         }
         setState(() {
-          if (role == 'Customer') {
-            _filteredJmsList = filteredData.where((jms) => jms.user_id == userId).toList();
+          if (role == 'User') {
+            _filteredJmsList =
+                filteredData.where((jms) => jms.user_id == userId).toList();
           } else {
             _filteredJmsList = filteredData;
           }
@@ -129,7 +144,8 @@ class _ListJmsPageState extends State<ListJmsPage> {
       }
     } catch (e) {
       setState(() {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
       });
     }
   }
@@ -137,7 +153,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   Future<void> _saveStatus(Datum jms, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/updateStatusJms.php'),
+        Uri.parse('http://192.168.31.53/kejaksaan/updateStatusJms.php'),
         body: {
           'id': jms.id,
           'status': status,
@@ -157,43 +173,41 @@ class _ListJmsPageState extends State<ListJmsPage> {
     }
   }
 
-  void _handleStatusButtonPress(Datum jms) {
-    if (role == 'Admin') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Approve Pengaduan?'),
-            content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(jms, 'Approved');
-                },
-                child: Text('Approve'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(jms, 'Rejected');
-                },
-                child: Text('Reject'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // void _handleStatusButtonPress(Datum jms) {
+  //   if (role == 'Admin') {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('Approve Pengaduan?'),
+  //           content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(jms, 'Approved');
+  //               },
+  //               child: Text('Approve'),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(jms, 'Rejected');
+  //               },
+  //               child: Text('Reject'),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   Future<void> _handleEdit(Datum jms) async {
     // Menunggu hasil dari EditAliranPage
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => EditJmsPage(jms: jms)
-      ),
+      MaterialPageRoute(builder: (context) => EditJmsPage(jms: jms)),
     );
 
     // Memeriksa apakah hasil pengeditan sukses
@@ -206,7 +220,8 @@ class _ListJmsPageState extends State<ListJmsPage> {
   Future<void> _handleDelete(Datum jms) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/deletejms.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse(
+            'http://192.168.31.53/kejaksaan/deletejms.php'), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': jms.id,
         },
@@ -246,7 +261,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => HomePage()),
-                  (route) => false,
+              (route) => false,
             );
           },
         ),
@@ -272,7 +287,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage()),
-                      (route) => false,
+                  (route) => false,
                 );
               });
             },
@@ -300,111 +315,111 @@ class _ListJmsPageState extends State<ListJmsPage> {
               ),
               _isLoading
                   ? Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _filteredJmsList.length,
-                itemBuilder: (context, index) {
-                  final jms = _filteredJmsList[index];
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 16.0),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Stack(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 12),
-                            padding: EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(Radius.circular(15)),
-                              color: Color(0xFFFFFFFF),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  jms.sekolah ?? '',
-                                  style: TextStyle(
-                                    fontFamily: 'Jost',
-                                    fontSize: 20,
-                                    color: Colors.orange,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Nama Pemohon: ' + (jms.nama_pelapor ?? 'Loading...'),
-                                  style: TextStyle(
-                                    fontFamily: 'Jost',
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Tanggal Pelaporan: ' + (jms.created_at ?? 'Loading...'),
-                                  style: TextStyle(
-                                    fontFamily: 'Jost',
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                Text(
-                                  'Created by: ${jms.fullname ?? 'Loading...'}',
-                                  style: TextStyle(
-                                    fontFamily: 'Jost',
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () => _handleStatusButtonPress(jms),
-                                      child: Text(
-                                        jms.status,
-                                        style: TextStyle(
-                                          fontFamily: 'Jost',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
+                  : _jmsList.isEmpty
+                      ? Center(
+                          child: Text('Anda belum membuat laporan'),
+                        )
+                      : _filteredJmsList.isEmpty
+                          ? Center(
+                              child: Text('Belum ada laporan'),
+                            )
+                          : ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: _filteredJmsList.length,
+                              itemBuilder: (context, index) {
+                                final jms = _filteredJmsList[index];
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 16.0),
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(top: 12),
+                                          padding: EdgeInsets.all(16.0),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
+                                            color: Color(0xFFFFFFFF),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                jms.sekolah ?? '',
+                                                style: TextStyle(
+                                                  fontFamily: 'Jost',
+                                                  fontSize: 20,
+                                                  color: Colors.orange,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'Nama Pemohon: ' +
+                                                    (jms.nama_pelapor ??
+                                                        'Loading...'),
+                                                style: TextStyle(
+                                                  fontFamily: 'Jost',
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'Tanggal Pelaporan: ' +
+                                                    (jms.created_at ??
+                                                        'Loading...'),
+                                                style: TextStyle(
+                                                  fontFamily: 'Jost',
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              SizedBox(height: 20),
+                                              Text(
+                                                'Created by: ${jms.fullname ?? 'Loading...'}',
+                                                style: TextStyle(
+                                                  fontFamily: 'Jost',
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () =>
+                                                    null,
+                                                    child: Text(
+                                                      jms.status,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Jost',
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                      maxLines: 2,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                      ],
                                     ),
-                                    if (role == 'Customer' && jms.status == 'Pending') ...[
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.edit),
-                                            onPressed: () => _handleEdit(jms),
-                                            tooltip: 'Edit',
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () => _handleDelete(jms),
-                                            tooltip: 'Delete',
-                                            color: Colors.red,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+                                  ),
+                                );
+                              },
+                            )
             ],
           ),
         ),

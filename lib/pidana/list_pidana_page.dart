@@ -434,6 +434,7 @@
 //
 //
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_kejaksaan/home_page.dart';
@@ -486,25 +487,28 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   }
 
   Future<void> _fetchPidana() async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/pidana.php'));
+    final response = await http.get(Uri.parse('http://192.168.31.53/kejaksaan/pidana.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
-      setState(() {
-        _pidanaList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
-        _filterPidanaByRole();
-        _isLoading = false;
-      });
+      if (parsed['data'] != null) {
+        setState(() {
+          _pidanaList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+          _filterPidanaByRole();
+        });
 
-      for (var pidana in _pidanaList) {
-        await _fetchUserData(pidana.user_id);
+        for (var pidana in _pidanaList) {
+          await _fetchUserData(pidana.user_id);
+        }
       }
-    } else {
-      throw Exception('Failed to load pidana');
     }
+    setState(() {
+      _isLoading = false; // Pastikan _isLoading diatur ke false di sini
+    });
+
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse('http://192.168.31.53/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -529,7 +533,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   }
 
   void _filterPidanaByRole() {
-    if (role == 'Customer') {
+    if (role == 'User') {
       setState(() {
         _filteredPidanaList = _pidanaList.where((pidana) => pidana.user_id == userId).toList();
       });
@@ -542,7 +546,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
 
   void _filterPidanaList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/pidana.php'));
+      final response = await http.get(Uri.parse('http://192.168.31.53/kejaksaan/pidana.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -550,12 +554,12 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
         if (query.isNotEmpty) {
           filteredData = allData.where((pidana) =>
           pidana.user_id.toLowerCase().contains(query.toLowerCase()) ||
-              pidana.status.toLowerCase().contains(query.toLowerCase())).toList();
+              pidana.nama_pelapor.toLowerCase().contains(query.toLowerCase())).toList();
         } else {
           filteredData = allData;
         }
         setState(() {
-          if (role == 'Customer') {
+          if (role == 'User') {
             _filteredPidanaList = filteredData.where((pidana) => pidana.user_id == userId).toList();
           } else {
             _filteredPidanaList = filteredData;
@@ -574,7 +578,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   Future<void> _saveStatus(Datum pidana, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/updateStatusPidana.php'),
+        Uri.parse('http://192.168.31.53/kejaksaan/updateStatusPidana.php'),
         body: {
           'id': pidana.id,
           'status': status,
@@ -594,35 +598,35 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
     }
   }
 
-  void _handleStatusButtonPress(Datum pidana) {
-    if (role == 'Admin') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Approve Pengaduan?'),
-            content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(pidana, 'Approved');
-                },
-                child: Text('Approve'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(pidana, 'Rejected');
-                },
-                child: Text('Reject'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // void _handleStatusButtonPress(Datum pidana) {
+  //   if (role == 'Admin') {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('Approve Pengaduan?'),
+  //           content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(pidana, 'Approved');
+  //               },
+  //               child: Text('Approve'),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(pidana, 'Rejected');
+  //               },
+  //               child: Text('Reject'),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   Future<void> _handleEdit(Datum pidana) async {
     // Menunggu hasil dari EditAliranPage
@@ -642,7 +646,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   Future<void> _handleDelete(Datum pidana) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/deletepidana.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse('http://192.168.31.53/kejaksaan/deletepidana.php'), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': pidana.id,
         },
@@ -676,7 +680,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "List Tindak Pidana Korupsi",
+          "List Tindak Pidana",
           style: TextStyle(
             fontFamily: 'Jost',
             fontSize: 18,
@@ -744,6 +748,10 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
               ),
               _isLoading
                   ? Center(child: CircularProgressIndicator())
+                  : _filteredPidanaList.isEmpty
+                  ? Center(
+                child: Text('Anda belum membuat laporan'),
+              )
                   : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -809,7 +817,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () => _handleStatusButtonPress(pidana),
+                                      onPressed: () => null,
                                       child: Text(
                                         pidana.status,
                                         style: TextStyle(
@@ -821,23 +829,23 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    if (role == 'Customer' && pidana.status == 'Pending') ...[
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.edit),
-                                            onPressed: () => _handleEdit(pidana),
-                                            tooltip: 'Edit',
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () => _handleDelete(pidana),
-                                            tooltip: 'Delete',
-                                            color: Colors.red,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                    // if (role == 'Customer' && pidana.status == 'Pending') ...[
+                                    //   Row(
+                                    //     children: [
+                                    //       IconButton(
+                                    //         icon: Icon(Icons.edit),
+                                    //         onPressed: () => _handleEdit(pidana),
+                                    //         tooltip: 'Edit',
+                                    //       ),
+                                    //       IconButton(
+                                    //         icon: Icon(Icons.delete),
+                                    //         onPressed: () => _handleDelete(pidana),
+                                    //         tooltip: 'Delete',
+                                    //         color: Colors.red,
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ],
                                   ],
                                 ),
                               ],

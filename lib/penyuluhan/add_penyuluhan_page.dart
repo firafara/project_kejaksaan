@@ -189,7 +189,7 @@ class _AddPenyuluhanPageState extends State<AddPenyuluhanPage> {
     });
 
     try {
-      Uri uri = Uri.parse('http://192.168.1.8/kejaksaan/addpenyuluhan.php');
+      Uri uri = Uri.parse('http://192.168.31.53/kejaksaan/addpenyuluhan.php');
 
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi

@@ -842,26 +842,46 @@ class _ListAliranPageState extends State<ListAliranPage> {
     }
   }
 
+  // Future<void> _fetchAliran() async {
+  //   final response = await http.get(Uri.parse('http://192.168.31.53/kejaksaan/pengawasan.php'));
+  //   if (response.statusCode == 200) {
+  //     final parsed = jsonDecode(response.body);
+  //     setState(() {
+  //       _aliranList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+  //       _filterAliranByRole();
+  //       _isLoading = false;
+  //     });
+  //
+  //     for (var aliran in _aliranList) {
+  //       await _fetchUserData(aliran.user_id);
+  //     }
+  //   } else {
+  //     throw Exception('Failed to load pengaduan');
+  //   }
+  // }
+
   Future<void> _fetchAliran() async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/pengawasan.php'));
+    final response = await http.get(Uri.parse('http://192.168.31.53/kejaksaan/pengawasan.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
-      setState(() {
-        _aliranList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
-        _filterAliranByRole();
-        _isLoading = false;
-      });
+      if (parsed['data'] != null) {
+        setState(() {
+          _aliranList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+          _filterAliranByRole();
+        });
 
-      for (var aliran in _aliranList) {
-        await _fetchUserData(aliran.user_id);
+        for (var aliran in _aliranList) {
+          await _fetchUserData(aliran.user_id);
+        }
       }
-    } else {
-      throw Exception('Failed to load pengaduan');
     }
+    setState(() {
+      _isLoading = false; // Pastikan _isLoading diatur ke false di sini
+    });
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse('http://192.168.31.53/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -886,7 +906,7 @@ class _ListAliranPageState extends State<ListAliranPage> {
   }
 
   void _filterAliranByRole() {
-    if (role == 'Customer') {
+    if (role == 'User') {
       setState(() {
         _filteredAliranList = _aliranList.where((aliran) => aliran.user_id == userId).toList();
       });
@@ -899,7 +919,7 @@ class _ListAliranPageState extends State<ListAliranPage> {
 
   void _filterAliranList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/pengawasan.php'));
+      final response = await http.get(Uri.parse('http://192.168.31.53/kejaksaan/pengawasan.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -907,12 +927,12 @@ class _ListAliranPageState extends State<ListAliranPage> {
         if (query.isNotEmpty) {
           filteredData = allData.where((aliran) =>
           aliran.user_id.toLowerCase().contains(query.toLowerCase()) ||
-              aliran.status.toLowerCase().contains(query.toLowerCase())).toList();
+              aliran.nama_pelapor.toLowerCase().contains(query.toLowerCase())).toList();
         } else {
           filteredData = allData;
         }
         setState(() {
-          if (role == 'Customer') {
+          if (role == 'User') {
             _filteredAliranList = filteredData.where((aliran) => aliran.user_id == userId).toList();
           } else {
             _filteredAliranList = filteredData;
@@ -931,7 +951,7 @@ class _ListAliranPageState extends State<ListAliranPage> {
   Future<void> _saveStatus(Datum aliran, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/updateStatusPengawasan.php'),
+        Uri.parse('http://192.168.31.53/kejaksaan/updateStatusPengawasan.php'),
         body: {
           'id': aliran.id,
           'status': status,
@@ -951,35 +971,35 @@ class _ListAliranPageState extends State<ListAliranPage> {
     }
   }
 
-  void _handleStatusButtonPress(Datum pengaduan) {
-    if (role == 'Admin') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Approve Pengaduan?'),
-            content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(pengaduan, 'Approved');
-                },
-                child: Text('Approve'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(pengaduan, 'Rejected');
-                },
-                child: Text('Reject'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // void _handleStatusButtonPress(Datum pengaduan) {
+  //   if (role == 'Admin') {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('Approve Pengaduan?'),
+  //           content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(pengaduan, 'Approved');
+  //               },
+  //               child: Text('Approve'),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(pengaduan, 'Rejected');
+  //               },
+  //               child: Text('Reject'),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   Future<void> _handleEdit(Datum aliran) async {
     // Menunggu hasil dari EditAliranPage
@@ -1103,6 +1123,10 @@ class _ListAliranPageState extends State<ListAliranPage> {
               ),
               _isLoading
                   ? Center(child: CircularProgressIndicator())
+                  : _filteredAliranList.isEmpty
+                  ? Center(
+                child: Text('Anda belum membuat laporan'),
+              )
                   : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -1168,7 +1192,7 @@ class _ListAliranPageState extends State<ListAliranPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () => _handleStatusButtonPress(aliran),
+                                      onPressed: () => null,
                                       child: Text(
                                         aliran.status,
                                         style: TextStyle(
@@ -1180,23 +1204,23 @@ class _ListAliranPageState extends State<ListAliranPage> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    if (role == 'Customer' && aliran.status == 'Pending') ...[
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.edit),
-                                            onPressed: () => _handleEdit(aliran),
-                                            tooltip: 'Edit',
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () => _handleDelete(aliran),
-                                            tooltip: 'Delete',
-                                            color: Colors.red,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                    // if (role == 'Customer' && aliran.status == 'Pending') ...[
+                                    //   Row(
+                                    //     children: [
+                                    //       IconButton(
+                                    //         icon: Icon(Icons.edit),
+                                    //         onPressed: () => _handleEdit(aliran),
+                                    //         tooltip: 'Edit',
+                                    //       ),
+                                    //       IconButton(
+                                    //         icon: Icon(Icons.delete),
+                                    //         onPressed: () => _handleDelete(aliran),
+                                    //         tooltip: 'Delete',
+                                    //         color: Colors.red,
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ],
                                   ],
                                 ),
                               ],

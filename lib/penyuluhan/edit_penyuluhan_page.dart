@@ -58,7 +58,7 @@ class _EditPenyuluhanPageState extends State<EditPenyuluhanPage> {
         isLoading = true;  // Atur isLoading menjadi true saat proses dimulai
       });
       try {
-        Uri uri = Uri.parse('http://192.168.1.8/kejaksaan/editpenyuluhan.php');
+        Uri uri = Uri.parse('http://192.168.31.53/kejaksaan/editpenyuluhan.php');
 
         http.MultipartRequest request = http.MultipartRequest('POST', uri)
           ..fields['id'] = widget.penyuluhan.id

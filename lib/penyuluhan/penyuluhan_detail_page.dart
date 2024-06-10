@@ -28,9 +28,9 @@ class _PenyuluhanDetailPageState extends State<PenyuluhanDetailPage> {
   Future<void> _downloadPdf(String type) async {
     String pdfUrl;
     if (type == 'laporan') {
-      pdfUrl = 'http://192.168.1.8/kejaksaan/${widget.penyuluhan.bentuk_permasalahan_pdf}';
+      pdfUrl = 'http://192.168.31.53/kejaksaan/${widget.penyuluhan.bentuk_permasalahan_pdf}';
     } else {
-      pdfUrl = 'http://192.168.1.8/kejaksaan/${widget.penyuluhan.ktp_pdf}';
+      pdfUrl = 'http://192.168.31.53/kejaksaan/${widget.penyuluhan.ktp_pdf}';
     }
 
     // Log the URL for debugging
