@@ -127,7 +127,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
 
   void _filterPengaduanList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pengaduan.php'));
+      final response = await http.get(Uri.parse('http://192.168.1.15/kejaksaan/pengaduan.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -333,7 +333,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
                   ? Center(child: CircularProgressIndicator())
                   : _filteredPengaduanList.isEmpty
                   ? Center(
-                child: Text('Anda belum membuat laporan'),
+                child: Text('Anda belum membuat permohonan'),
               )
                   : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -342,7 +342,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
                 itemBuilder: (context, index) {
                 if (_filteredPengaduanList.isEmpty) {
                   return Center(
-                    child: Text('Belum ada laporan'),
+                    child: Text('Belum ada permohonan'),
                   );
                 } else {
                   final pengaduan = _filteredPengaduanList[index];

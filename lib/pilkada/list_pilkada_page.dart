@@ -746,7 +746,7 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
                   ? Center(child: CircularProgressIndicator())
                   : _filteredPilkadaList.isEmpty
                   ? Center(
-                child: Text('Anda belum membuat laporan'),
+                child: Text('Anda belum membuat permohonan'),
               )
                   : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),

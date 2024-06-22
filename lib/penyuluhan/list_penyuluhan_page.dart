@@ -767,7 +767,7 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
                   ? Center(child: CircularProgressIndicator())
                   : _filteredPenyuluhanList.isEmpty
                   ? Center(
-                child: Text('Anda belum membuat laporan'),
+                child: Text('Anda belum membuat permohonan'),
               )
                   : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),

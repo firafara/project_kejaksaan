@@ -750,7 +750,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
                   ? Center(child: CircularProgressIndicator())
                   : _filteredPidanaList.isEmpty
                   ? Center(
-                child: Text('Anda belum membuat laporan'),
+                child: Text('Anda belum membuat permohonan'),
               )
                   : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
