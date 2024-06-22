@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_kejaksaan/welcome_page.dart';
+import 'package:project_kejaksaan/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,32 +9,30 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Aplikasi Kejaksaan',
       theme: ThemeData(
-        // This is the theme of your application.
+        // Ini adalah tema aplikasi Anda.
         //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
+        // COBA INI: Cobalah menjalankan aplikasi Anda dengan "flutter run". Anda akan melihat
+        // aplikasi memiliki toolbar berwarna ungu. Kemudian, tanpa keluar dari aplikasi,
+        // coba ubah seedColor dalam colorScheme di bawah ini menjadi Colors.green
+        // dan kemudian lakukan "hot reload" (simpan perubahan Anda atau tekan tombol "hot reload"
+        // di IDE yang mendukung Flutter, atau tekan "r" jika Anda menggunakan
+        // baris perintah untuk memulai aplikasi).
         //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
+        // Perhatikan bahwa penghitung tidak direset kembali ke nol; status aplikasi
+        // tidak hilang selama reload. Untuk mereset status, gunakan hot restart sebagai gantinya.
         //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
+        // Ini juga berfungsi untuk kode, bukan hanya nilai: Sebagian besar perubahan kode dapat diuji
+        // dengan hanya hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const WelcomePage(),
-      debugShowCheckedModeBanner: false,
+      home: WelcomePage(),
+      debugShowCheckedModeBanner: false, // Menyembunyikan banner mode debug.
     );
   }
 }

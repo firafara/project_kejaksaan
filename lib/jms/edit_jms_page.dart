@@ -17,7 +17,8 @@ class EditJmsPage extends StatefulWidget {
 class _EditJmsPageState extends State<EditJmsPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _sekolahController = TextEditingController();
-  TextEditingController _namaPelaporController = TextEditingController();
+  TextEditingController _namaPemohonController = TextEditingController();
+  TextEditingController _permohonanController = TextEditingController();
   bool isLoading = false;
 
 
@@ -25,7 +26,9 @@ class _EditJmsPageState extends State<EditJmsPage> {
   void initState() {
     super.initState();
     _sekolahController.text = widget.jms.sekolah ?? '';
-    _namaPelaporController.text = widget.jms.nama_pelapor ?? '';
+    _namaPemohonController.text = widget.jms.nama_pemohon ?? '';
+    _permohonanController.text = widget.jms.permohonan ?? '';
+
   }
 
   Future<void> _updateAliran() async {
@@ -34,13 +37,14 @@ class _EditJmsPageState extends State<EditJmsPage> {
         isLoading = true;  // Atur isLoading menjadi true saat proses dimulai
       });
       try {
-        Uri uri = Uri.parse('http://192.168.1.8/kejaksaan/editjms.php');
+        Uri uri = Uri.parse('http://192.168.1.7/kejaksaan/editjms.php');
 
         http.MultipartRequest request = http.MultipartRequest('POST', uri)
           ..fields['id'] = widget.jms.id
           ..fields['user_id'] = widget.jms.user_id
           ..fields['sekolah'] = _sekolahController.text
-          ..fields['nama_pelapor'] = _namaPelaporController.text
+          ..fields['nama_pelapor'] = _namaPemohonController.text
+          ..fields['permohonan'] = _permohonanController.text
           ..fields['status'] = widget.jms.status;
 
 
@@ -71,7 +75,7 @@ class _EditJmsPageState extends State<EditJmsPage> {
   @override
   void dispose() {
     _sekolahController.dispose();
-    _namaPelaporController.dispose();
+    _namaPemohonController.dispose();
     super.dispose();
   }
 
@@ -112,7 +116,7 @@ class _EditJmsPageState extends State<EditJmsPage> {
                   ),
                   contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 ),
-                controller: _namaPelaporController,
+                controller: _namaPemohonController,
               ),
               SizedBox(height: 20),
               TextField(

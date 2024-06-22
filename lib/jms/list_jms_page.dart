@@ -49,7 +49,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   }
 
   Future<void> _fetchJms() async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/jms.php'));
+    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/jms.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       setState(() {
@@ -67,7 +67,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -105,7 +105,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
 
   void _filterJmsList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/jms.php'));
+      final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/jms.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -137,7 +137,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   Future<void> _saveStatus(Datum jms, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/updateStatusJms.php'),
+        Uri.parse('http://192.168.1.7/kejaksaan/updateStatusJms.php'),
         body: {
           'id': jms.id,
           'status': status,
@@ -206,7 +206,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   Future<void> _handleDelete(Datum jms) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/deletejms.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse('http://192.168.1.7/kejaksaan/deletejms.php'), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': jms.id,
         },
@@ -334,7 +334,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Nama Pemohon: ' + (jms.nama_pelapor ?? 'Loading...'),
+                                  'Nama Pemohon: ' + (jms.nama_pemohon ?? 'Loading...'),
                                   style: TextStyle(
                                     fontFamily: 'Jost',
                                     fontSize: 14,

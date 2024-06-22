@@ -37,7 +37,7 @@ class _AddPengaduanPageState extends State<AddPengaduanPage> {
 
   Future<void> getFullName(String userId) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/getUser?id=$userId'));
+      final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/getUser?id=$userId'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
@@ -186,7 +186,7 @@ class _AddPengaduanPageState extends State<AddPengaduanPage> {
     });
 
     try {
-      Uri uri = Uri.parse('http://192.168.1.8/kejaksaan/addpengaduan.php');
+      Uri uri = Uri.parse('http://192.168.1.7/kejaksaan/addpengaduan.php');
 
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi

@@ -59,7 +59,7 @@ class _EditAliranPageState extends State<EditAliranPage> {
       });
 
       try {
-        Uri uri = Uri.parse('http://192.168.1.8/kejaksaan/editpengawasan.php');
+        Uri uri = Uri.parse('http://192.168.1.7/kejaksaan/editpengawasan.php');
 
         http.MultipartRequest request = http.MultipartRequest('POST', uri)
           ..fields['id'] = widget.aliran.id

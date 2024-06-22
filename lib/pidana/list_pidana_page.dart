@@ -486,7 +486,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   }
 
   Future<void> _fetchPidana() async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/pidana.php'));
+    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pidana.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       setState(() {
@@ -504,7 +504,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -542,7 +542,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
 
   void _filterPidanaList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/pidana.php'));
+      final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pidana.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -574,7 +574,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   Future<void> _saveStatus(Datum pidana, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/updateStatusPidana.php'),
+        Uri.parse('http://192.168.1.7/kejaksaan/updateStatusPidana.php'),
         body: {
           'id': pidana.id,
           'status': status,
@@ -642,7 +642,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   Future<void> _handleDelete(Datum pidana) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/deletepidana.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse('http://192.168.1.7/kejaksaan/deletepidana.php'), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': pidana.id,
         },

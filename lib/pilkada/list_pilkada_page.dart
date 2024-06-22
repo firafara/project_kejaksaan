@@ -483,7 +483,7 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
   }
 
   Future<void> _fetchPilkada() async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/pilkada.php'));
+    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pilkada.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       setState(() {
@@ -501,7 +501,7 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed'); // Print the response body to debug
@@ -539,7 +539,7 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
 
   void _filterPilkadaList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/pilkada.php'));
+      final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pilkada.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -571,7 +571,7 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
   Future<void> _saveStatus(Datum pilkada, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/updateStatusPilkada.php'),
+        Uri.parse('http://192.168.1.7/kejaksaan/updateStatusPilkada.php'),
         body: {
           'id': pilkada.id,
           'status': status,
@@ -640,7 +640,7 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
   Future<void> _handleDelete(Datum pilkada) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/deletepilkada.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse('http://192.168.1.7/kejaksaan/deletepilkada.php'), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': pilkada.id,
         },

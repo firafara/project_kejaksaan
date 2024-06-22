@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
         isLoading = true;
       });
       http.Response res = await http.post(
-        Uri.parse('http://192.168.1.8/kejaksaan/register.php'),
+        Uri.parse('http://192.168.1.7/kejaksaan/register.php'),
         body: {
           "username": txtUsername.text,
           "password": txtPassword.text,

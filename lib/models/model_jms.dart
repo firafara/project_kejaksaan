@@ -35,10 +35,11 @@ class Datum {
   String status;
   String created_at;
   String sekolah;
-  String nama_pelapor;
+  String nama_pemohon;
   String fullname;
   String ktp; // New field for KTP
-  String no_hp; // New field for No HP
+  String no_hp;
+  String permohonan;// New field for No HP
 
   Datum({
     required this.id,
@@ -46,11 +47,11 @@ class Datum {
     required this.status,
     required this.created_at,
     required this.sekolah,
-    required this.nama_pelapor,
+    required this.nama_pemohon,
     required this.fullname,
     required this.ktp, // Include ktp in the constructor
     required this.no_hp, // Include no_hp in the constructor
-
+    required this.permohonan,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -59,10 +60,11 @@ class Datum {
     status: json["status"] ?? 'No Content',
     created_at: json["created_at"] ?? '',
     sekolah: json["sekolah"] ?? 'Unknown',
-    nama_pelapor: json["nama_pelapor"] ?? '',
+    nama_pemohon: json["nama_pemohon"] ?? '',
     fullname: json["fullname"] ?? 'Unknown',
     ktp: json["ktp"] ?? '', // Parse ktp from JSON
     no_hp: json["no_hp"] ?? '', // Parse no_hp from JSON
+    permohonan: json["permohonan"] ?? '',
 
   );
 
@@ -72,10 +74,11 @@ class Datum {
     "status": status,
     "created_at": created_at,
     "sekolah": sekolah,
-    "nama_pelapor": nama_pelapor,
+    "nama_pemohon": nama_pemohon,
     "fullname": fullname,
     "ktp": ktp, // Include ktp in JSON serialization
     "no_hp": no_hp, // Include no_hp in JSON serialization
+    "permohonan": permohonan,
 
   };
 }

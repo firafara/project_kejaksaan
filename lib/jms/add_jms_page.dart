@@ -19,8 +19,10 @@ class AddJmsPage extends StatefulWidget {
 
 class _AddJmsPageState extends State<AddJmsPage> {
   TextEditingController _userIdController = TextEditingController();
-  TextEditingController _namaPelaporController = TextEditingController(); // Add controller for nama_pelapor
+  TextEditingController _namaPemohonController = TextEditingController(); // Add controller for nama_pelapor
   TextEditingController _sekolahController = TextEditingController(); // Add controller for no_hp
+  TextEditingController _permohonanController = TextEditingController(); // Add controller for no_hp
+
 
   String _fullname = ''; // Tambahkan variabel untuk menyimpan fullname
 
@@ -33,7 +35,7 @@ class _AddJmsPageState extends State<AddJmsPage> {
 
   Future<void> getFullName(String userId) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/getUser?id=$userId'));
+      final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/getUser?id=$userId'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
@@ -50,13 +52,14 @@ class _AddJmsPageState extends State<AddJmsPage> {
   Future<void> addPengaduan() async {
     String userId = sessionManager.id ?? ''; // Get the user ID from the session manager
     print('User ID: $userId');
-    print('Nama Pelapor: ${_namaPelaporController.text}');
+    print('Nama Pemohon: ${_namaPemohonController.text}');
     print('No HP: ${_sekolahController.text}');
+    print('Permohonan: ${_permohonanController}');
 
     // Check if other required fields are empty
     if (userId.isEmpty ||
-        _namaPelaporController.text.isEmpty || // Check if nama_pelapor is empty
-        _sekolahController.text.isEmpty) { // Check if no_hp is empty
+        _namaPemohonController.text.isEmpty || // Check if nama_pelapor is empty
+        _sekolahController.text.isEmpty || _permohonanController.text.isEmpty){ // Check if no_hp is empty
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Semua field harus diisi')),
       );
@@ -68,13 +71,14 @@ class _AddJmsPageState extends State<AddJmsPage> {
     });
 
     try {
-      Uri uri = Uri.parse('http://192.168.1.8/kejaksaan/addjms.php');
+      Uri uri = Uri.parse('http://192.168.1.7/kejaksaan/addjms.php');
 
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi
         ..fields['status'] = 'Pending'
-        ..fields['nama_pelapor'] = _namaPelaporController.text
-        ..fields['sekolah'] = _sekolahController.text;
+        ..fields['nama_pemohon'] = _namaPemohonController.text
+        ..fields['sekolah'] = _sekolahController.text
+        ..fields['permohonan'] = _permohonanController.text;
 
       http.StreamedResponse response = await request.send();
       String responseBody = await response.stream.bytesToString();
@@ -182,7 +186,7 @@ class _AddJmsPageState extends State<AddJmsPage> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                hintText: "Nama Pelapor",
+                hintText: "Nama Pemohon",
                 prefixIcon: Icon(Icons.person, color: Color(0xFF545454)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -190,7 +194,7 @@ class _AddJmsPageState extends State<AddJmsPage> {
                 ),
                 contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
-              controller: _namaPelaporController,
+              controller: _namaPemohonController,
             ),
             SizedBox(height: 20),
             TextField(
@@ -209,6 +213,25 @@ class _AddJmsPageState extends State<AddJmsPage> {
                 contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               controller: _sekolahController,
+            ),
+            SizedBox(height: 20),
+            TextField(
+              style: TextStyle(
+                fontFamily: 'Mulish',
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: "Permohonan",
+                prefixIcon: Icon(Icons.file_copy_sharp, color: Color(0xFF545454)), // Mengubah ikon menjadi ikon file
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              ),
+              maxLines: null, // Atau jumlah baris yang diinginkan
+              controller: _permohonanController,
             ),
             SizedBox(height: 25),
             InkWell(
