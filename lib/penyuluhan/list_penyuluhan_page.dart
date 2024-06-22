@@ -484,23 +484,44 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
     }
   }
 
+  // Future<void> _fetchPenyuluhan() async {
+  //   final response = await http.get(Uri.parse('http://192.168.1.8/kejaksaan/penyuluhan.php'));
+  //   if (response.statusCode == 200) {
+  //     final parsed = jsonDecode(response.body);
+  //     setState(() {
+  //       _penyuluhanList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+  //       _filterPenyuluhanByRole();
+  //       _isLoading = false;
+  //     });
+  //
+  //     for (var penyuluhan in _penyuluhanList) {
+  //       await _fetchUserData(penyuluhan.user_id);
+  //     }
+  //   } else {
+  //     throw Exception('Failed to load penyuluhan');
+  //   }
+  // }
   Future<void> _fetchPenyuluhan() async {
     final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/penyuluhan.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
-      setState(() {
-        _penyuluhanList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
-        _filterPenyuluhanByRole();
-        _isLoading = false;
-      });
+      if (parsed['data'] != null) {
+        setState(() {
+          _penyuluhanList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+          _filterPenyuluhanByRole();
+        });
 
-      for (var penyuluhan in _penyuluhanList) {
-        await _fetchUserData(penyuluhan.user_id);
+        for (var penyuluhan in _penyuluhanList) {
+          await _fetchUserData(penyuluhan.user_id);
+        }
       }
-    } else {
-      throw Exception('Failed to load penyuluhan');
     }
+    setState(() {
+      _isLoading = false; // Pastikan _isLoading diatur ke false di sini
+    });
   }
+
+
 
   Future<void> _fetchUserData(String userId) async {
     final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'));
@@ -528,7 +549,7 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
   }
 
   void _filterPenyuluhanByRole() {
-    if (role == 'Customer') {
+    if (role == 'User') {
       setState(() {
         _filteredPenyuluhanList = _penyuluhanList.where((penyuluhan) => penyuluhan.user_id == userId).toList();
       });
@@ -549,12 +570,12 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
         if (query.isNotEmpty) {
           filteredData = allData.where((penyuluhan) =>
           penyuluhan.user_id.toLowerCase().contains(query.toLowerCase()) ||
-              penyuluhan.status.toLowerCase().contains(query.toLowerCase())).toList();
+              penyuluhan.nama_pelapor.toLowerCase().contains(query.toLowerCase())).toList();
         } else {
           filteredData = allData;
         }
         setState(() {
-          if (role == 'Customer') {
+          if (role == 'User') {
             _filteredPenyuluhanList = filteredData.where((penyuluhan) => penyuluhan.user_id == userId).toList();
           } else {
             _filteredPenyuluhanList = filteredData;
@@ -593,35 +614,35 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
     }
   }
 
-  void _handleStatusButtonPress(Datum penyuluhan) {
-    if (role == 'Admin') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Approve Penyuluhan?'),
-            content: Text('Apakah Anda ingin menyetujui penyuluhan ini?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(penyuluhan, 'Approved');
-                },
-                child: Text('Approve'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(penyuluhan, 'Rejected');
-                },
-                child: Text('Reject'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // void _handleStatusButtonPress(Datum penyuluhan) {
+  //   if (role == 'Admin') {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('Approve Penyuluhan?'),
+  //           content: Text('Apakah Anda ingin menyetujui penyuluhan ini?'),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(penyuluhan, 'Approved');
+  //               },
+  //               child: Text('Approve'),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(penyuluhan, 'Rejected');
+  //               },
+  //               child: Text('Reject'),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   Future<void> _handleEdit(Datum penyuluhan) async {
     // Menunggu hasil dari EditAliranPage
@@ -744,6 +765,10 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
               ),
               _isLoading
                   ? Center(child: CircularProgressIndicator())
+                  : _filteredPenyuluhanList.isEmpty
+                  ? Center(
+                child: Text('Anda belum membuat laporan'),
+              )
                   : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -761,11 +786,13 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
                             padding: EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(Radius.circular(15)),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(15)),
                               color: Color(0xFFFFFFFF),
                             ),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   penyuluhan.bentuk_permasalahan ?? '',
@@ -778,7 +805,9 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Nama Pelapor: ' + (penyuluhan.nama_pelapor ?? 'Loading...'),
+                                  'Nama Pelapor: ' +
+                                      (penyuluhan.nama_pelapor ??
+                                          'Loading...'),
                                   style: TextStyle(
                                     fontFamily: 'Jost',
                                     fontSize: 14,
@@ -787,7 +816,9 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Tanggal Pelaporan: ' + (penyuluhan.created_at ?? 'Loading...'),
+                                  'Tanggal Pelaporan: ' +
+                                      (penyuluhan.created_at ??
+                                          'Loading...'),
                                   style: TextStyle(
                                     fontFamily: 'Jost',
                                     fontSize: 14,
@@ -806,10 +837,11 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () => _handleStatusButtonPress(penyuluhan),
+                                      onPressed: () => null,
                                       child: Text(
                                         penyuluhan.status,
                                         style: TextStyle(
@@ -821,23 +853,6 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    if (role == 'Customer' && penyuluhan.status == 'Pending') ...[
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.edit),
-                                            onPressed: () => _handleEdit(penyuluhan),
-                                            tooltip: 'Edit',
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () => _handleDelete(penyuluhan),
-                                            tooltip: 'Delete',
-                                            color: Colors.red,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
                                   ],
                                 ),
                               ],
@@ -853,6 +868,7 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
           ),
         ),
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

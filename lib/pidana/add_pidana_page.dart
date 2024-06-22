@@ -277,7 +277,7 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
         title: Row(
           children: [
             Text(
-              'Add Pidana Korupsi',
+              'Add Tindak Pidana',
               style: TextStyle(
                 fontSize: 18.0,
                 fontFamily: 'Jost',

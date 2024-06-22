@@ -486,18 +486,20 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
     final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pilkada.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
-      setState(() {
-        _pilkadaList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
-        _filterPilkadaByRole();
-        _isLoading = false;
-      });
+      if (parsed['data'] != null) {
+        setState(() {
+          _pilkadaList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+          _filterPilkadaByRole();
+        });
 
-      for (var pilkada in _pilkadaList) {
-        await _fetchUserData(pilkada.user_id);
+        for (var pilkada in _pilkadaList) {
+          await _fetchUserData(pilkada.user_id);
+        }
       }
-    } else {
-      throw Exception('Failed to load pengaduan');
     }
+    setState(() {
+      _isLoading = false; // Pastikan _isLoading diatur ke false di sini
+    });
   }
 
   Future<void> _fetchUserData(String userId) async {
@@ -526,7 +528,7 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
   }
 
   void _filterPilkadaByRole() {
-    if (role == 'Customer') {
+    if (role == 'User') {
       setState(() {
         _filteredPilkadaList = _pilkadaList.where((pilkada) => pilkada.user_id == userId).toList();
       });
@@ -547,12 +549,12 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
         if (query.isNotEmpty) {
           filteredData = allData.where((pilkada) =>
           pilkada.user_id.toLowerCase().contains(query.toLowerCase()) ||
-              pilkada.status.toLowerCase().contains(query.toLowerCase())).toList();
+              pilkada.nama_pelapor.toLowerCase().contains(query.toLowerCase())).toList();
         } else {
           filteredData = allData;
         }
         setState(() {
-          if (role == 'Customer') {
+          if (role == 'User') {
             _filteredPilkadaList = filteredData.where((pilkada) => pilkada.user_id == userId).toList();
           } else {
             _filteredPilkadaList = filteredData;
@@ -591,35 +593,35 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
     }
   }
 
-  void _handleStatusButtonPress(Datum pilkada) {
-    if (role == 'Admin') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Approve Pengaduan?'),
-            content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(pilkada, 'Approved');
-                },
-                child: Text('Approve'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _saveStatus(pilkada, 'Rejected');
-                },
-                child: Text('Reject'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // void _handleStatusButtonPress(Datum pilkada) {
+  //   if (role == 'Admin') {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('Approve Pengaduan?'),
+  //           content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(pilkada, 'Approved');
+  //               },
+  //               child: Text('Approve'),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _saveStatus(pilkada, 'Rejected');
+  //               },
+  //               child: Text('Reject'),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   Future<void> _handleEdit(Datum pilkada) async {
     // Menunggu hasil dari EditAliranPage
@@ -742,6 +744,10 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
               ),
               _isLoading
                   ? Center(child: CircularProgressIndicator())
+                  : _filteredPilkadaList.isEmpty
+                  ? Center(
+                child: Text('Anda belum membuat laporan'),
+              )
                   : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -807,7 +813,7 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () => _handleStatusButtonPress(pilkada),
+                                      onPressed: () => null,
                                       child: Text(
                                         pilkada.status,
                                         style: TextStyle(
@@ -819,23 +825,23 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    if (role == 'Customer' && pilkada.status == 'Pending') ...[
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.edit),
-                                            onPressed: () => _handleEdit(pilkada),
-                                            tooltip: 'Edit',
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () => _handleDelete(pilkada),
-                                            tooltip: 'Delete',
-                                            color: Colors.red,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                    // if (role == 'Customer' && pilkada.status == 'Pending') ...[
+                                    //   Row(
+                                    //     children: [
+                                    //       IconButton(
+                                    //         icon: Icon(Icons.edit),
+                                    //         onPressed: () => _handleEdit(pilkada),
+                                    //         tooltip: 'Edit',
+                                    //       ),
+                                    //       IconButton(
+                                    //         icon: Icon(Icons.delete),
+                                    //         onPressed: () => _handleDelete(pilkada),
+                                    //         tooltip: 'Delete',
+                                    //         color: Colors.red,
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ],
                                   ],
                                 ),
                               ],
