@@ -49,13 +49,14 @@ class _ListJmsPageState extends State<ListJmsPage> {
   }
 
   Future<void> _fetchJms() async {
-    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/jms.php'));
+    final response =
+    await http.get(Uri.parse('http://192.168.1.7/kejaksaan/jms.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       if (parsed['data'] != null) {
         setState(() {
           _jmsList =
-              List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+          List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
           _filterJmsByRole();
           _isLoading = false;
         });
@@ -74,7 +75,8 @@ class _ListJmsPageState extends State<ListJmsPage> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(
+        Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -113,17 +115,18 @@ class _ListJmsPageState extends State<ListJmsPage> {
 
   void _filterJmsList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/jms.php'));
+      final response =
+      await http.get(Uri.parse('http://192.168.1.7/kejaksaan/jms.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData =
-            List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
+        List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
         List<Datum> filteredData;
         if (query.isNotEmpty) {
           filteredData = allData
               .where((jms) =>
-                  jms.user_id.toLowerCase().contains(query.toLowerCase()) ||
-                  jms.nama_pelapor.toLowerCase().contains(query.toLowerCase()))
+          jms.user_id.toLowerCase().contains(query.toLowerCase()) ||
+              jms.nama_pemohon.toLowerCase().contains(query.toLowerCase()))
               .toList();
         } else {
           filteredData = allData;
@@ -217,7 +220,8 @@ class _ListJmsPageState extends State<ListJmsPage> {
   Future<void> _handleDelete(Datum jms) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.7/kejaksaan/deletejms.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse(
+            'http://192.168.1.7/kejaksaan/deletejms.php'), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': jms.id,
         },
@@ -257,7 +261,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => HomePage()),
-              (route) => false,
+                  (route) => false,
             );
           },
         ),
@@ -283,7 +287,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage()),
-                  (route) => false,
+                      (route) => false,
                 );
               });
             },
@@ -311,6 +315,14 @@ class _ListJmsPageState extends State<ListJmsPage> {
               ),
               _isLoading
                   ? Center(child: CircularProgressIndicator())
+                  : _jmsList.isEmpty
+                  ? Center(
+                child: Text('Anda belum membuat laporan'),
+              )
+                  : _filteredJmsList.isEmpty
+                  ? Center(
+                child: Text('Belum ada laporan'),
+              )
                   : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -328,11 +340,13 @@ class _ListJmsPageState extends State<ListJmsPage> {
                             padding: EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(Radius.circular(15)),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(15)),
                               color: Color(0xFFFFFFFF),
                             ),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   jms.sekolah ?? '',
@@ -345,7 +359,9 @@ class _ListJmsPageState extends State<ListJmsPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Nama Pemohon: ' + (jms.nama_pemohon ?? 'Loading...'),
+                                  'Nama Pemohon: ' +
+                                      (jms.nama_pemohon ??
+                                          'Loading...'),
                                   style: TextStyle(
                                     fontFamily: 'Jost',
                                     fontSize: 14,
@@ -354,7 +370,20 @@ class _ListJmsPageState extends State<ListJmsPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Tanggal Pelaporan: ' + (jms.created_at ?? 'Loading...'),
+                                  'Tanggal Permohonan: ' +
+                                      (jms.created_at ??
+                                          'Loading...'),
+                                  style: TextStyle(
+                                    fontFamily: 'Jost',
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Permohonan: ' +
+                                      (jms.permohonan ??
+                                          'Loading...'),
                                   style: TextStyle(
                                     fontFamily: 'Jost',
                                     fontSize: 14,
@@ -373,10 +402,13 @@ class _ListJmsPageState extends State<ListJmsPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment
+                                      .spaceBetween,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () => _handleStatusButtonPress(jms),
+                                      onPressed: () =>
+                                      null,
                                       child: Text(
                                         jms.status,
                                         style: TextStyle(
@@ -384,12 +416,21 @@ class _ListJmsPageState extends State<ListJmsPage> {
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
                                         ),
-                                      ],
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              )
             ],
           ),
         ),
