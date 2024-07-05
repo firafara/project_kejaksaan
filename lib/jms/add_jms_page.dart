@@ -53,13 +53,11 @@ class _AddJmsPageState extends State<AddJmsPage> {
     String userId = sessionManager.id ?? ''; // Get the user ID from the session manager
     print('User ID: $userId');
     print('Nama Pemohon: ${_namaPemohonController.text}');
-    print('No HP: ${_sekolahController.text}');
-    print('Permohonan: ${_permohonanController}');
+    print('Sekolah: ${_sekolahController.text}');
+    print('Permohonan: ${_permohonanController.text}');
 
     // Check if other required fields are empty
-    if (userId.isEmpty ||
-        _namaPemohonController.text.isEmpty || // Check if nama_pelapor is empty
-        _sekolahController.text.isEmpty || _permohonanController.text.isEmpty){ // Check if no_hp is empty
+    if (userId.isEmpty || _namaPemohonController.text.isEmpty || _sekolahController.text.isEmpty || _permohonanController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Semua field harus diisi')),
       );
@@ -76,7 +74,7 @@ class _AddJmsPageState extends State<AddJmsPage> {
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi
         ..fields['status'] = 'Pending'
-        ..fields['nama_pemohon'] = _namaPemohonController.text
+        ..fields['nama_pelapor'] = _namaPemohonController.text
         ..fields['sekolah'] = _sekolahController.text
         ..fields['permohonan'] = _permohonanController.text;
 
@@ -114,6 +112,7 @@ class _AddJmsPageState extends State<AddJmsPage> {
       });
     }
   }
+
 
 
 

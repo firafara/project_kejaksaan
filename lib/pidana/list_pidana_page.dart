@@ -598,35 +598,35 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
     }
   }
 
-  // void _handleStatusButtonPress(Datum pidana) {
-  //   if (role == 'Admin') {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Approve Pengaduan?'),
-  //           content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(pidana, 'Approved');
-  //               },
-  //               child: Text('Approve'),
-  //             ),
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(pidana, 'Rejected');
-  //               },
-  //               child: Text('Reject'),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
+  void _handleStatusButtonPress(Datum pidana) {
+    if (role == 'Admin') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Approve Pengaduan?'),
+            content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(pidana, 'Approved');
+                },
+                child: Text('Approve'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(pidana, 'Rejected');
+                },
+                child: Text('Reject'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   Future<void> _handleEdit(Datum pidana) async {
     // Menunggu hasil dari EditAliranPage
@@ -817,7 +817,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () => null,
+                                      onPressed: () =>_handleStatusButtonPress(pidana),
                                       child: Text(
                                         pidana.status,
                                         style: TextStyle(

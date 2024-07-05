@@ -971,35 +971,35 @@ class _ListAliranPageState extends State<ListAliranPage> {
     }
   }
 
-  // void _handleStatusButtonPress(Datum pengaduan) {
-  //   if (role == 'Admin') {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Approve Pengaduan?'),
-  //           content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(pengaduan, 'Approved');
-  //               },
-  //               child: Text('Approve'),
-  //             ),
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(pengaduan, 'Rejected');
-  //               },
-  //               child: Text('Reject'),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
+  void _handleStatusButtonPress(Datum pengaduan) {
+    if (role == 'Admin') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Approve Pengaduan?'),
+            content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(pengaduan, 'Approved');
+                },
+                child: Text('Approve'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(pengaduan, 'Rejected');
+                },
+                child: Text('Reject'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   Future<void> _handleEdit(Datum aliran) async {
     // Menunggu hasil dari EditAliranPage
@@ -1192,7 +1192,8 @@ class _ListAliranPageState extends State<ListAliranPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () => null,
+                                      onPressed: () => _handleStatusButtonPress(aliran),
+
                                       child: Text(
                                         aliran.status,
                                         style: TextStyle(
