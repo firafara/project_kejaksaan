@@ -99,7 +99,7 @@ class _ListUserDataPageState extends State<ListUserDataPage> {
 
   Future<void> _fetchUser() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.74.3/kejaksaan/user.php'));
+      final response = await http.get(Uri.parse('http://192.168.31.53/kejaksaan/user.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         if (parsed['data'] != null) {

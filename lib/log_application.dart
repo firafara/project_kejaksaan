@@ -11,23 +11,34 @@ class LogApplication extends StatefulWidget {
 
 class _LogApplicationState extends State<LogApplication> {
   List<Map<String, dynamic>> logData = []; // List untuk menyimpan data log
+  List<Map<String, dynamic>> filteredLogData = []; // List untuk menyimpan data log yang difilter
   Map<String, int> activityCount = {}; // Map untuk menyimpan jumlah aktivitas
   Map<int, String> userIdToUsername = {}; // Map untuk menyimpan username berdasarkan user_id
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     fetchData(); // Panggil method fetchData saat initState dipanggil
+    _searchController.addListener(_filterLogs); // Tambahkan listener untuk pencarian
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_filterLogs);
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchData() async {
-    final url = Uri.parse('http://192.168.1.7/kejaksaan/getLog.php'); // Ganti dengan URL API Anda
+    final url = Uri.parse('http://192.168.31.53/kejaksaan/getLog.php'); // Ganti dengan URL API Anda
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = jsonDecode(response.body); // Decode response body menjadi Map<String, dynamic>
         setState(() {
           logData = responseData['data'].cast<Map<String, dynamic>>(); // Ambil 'data' dari responseData dan cast menjadi List<Map<String, dynamic>>
+          filteredLogData = logData; // Inisialisasi filteredLogData dengan semua data log
           countActivities(); // Panggil method untuk menghitung jumlah aktivitas setelah data diperbarui
         });
         fetchUsernames(); // Panggil method untuk mengambil username berdasarkan user_id
@@ -51,7 +62,7 @@ class _LogApplicationState extends State<LogApplication> {
         continue;
       }
 
-      final userUrl = Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'); // Ganti dengan URL API getUser.php
+      final userUrl = Uri.parse('http://192.168.31.53/kejaksaan/getUser.php?id=$userId'); // Ganti dengan URL API getUser.php
       try {
         final userResponse = await http.get(userUrl);
         if (userResponse.statusCode == 200) {
@@ -88,6 +99,16 @@ class _LogApplicationState extends State<LogApplication> {
     return userIdToUsername[userId] ?? 'Unknown'; // Ambil username dari userIdToUsername, jika tidak ada kembalikan 'Unknown'
   }
 
+  void _filterLogs() {
+    String query = _searchController.text.toLowerCase();
+    setState(() {
+      filteredLogData = logData.where((log) {
+        String logDescription = (log['log_description'] ?? '').toString().toLowerCase();
+        return logDescription.contains(query);
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,6 +118,16 @@ class _LogApplicationState extends State<LogApplication> {
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: 'Search by Log Description',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
           // Tampilkan jumlah aktivitas berdasarkan jenis
           Card(
             margin: EdgeInsets.all(16.0),
@@ -123,14 +154,14 @@ class _LogApplicationState extends State<LogApplication> {
           // Tampilkan daftar log
           Expanded(
             child: ListView.builder(
-              itemCount: logData.length,
+              itemCount: filteredLogData.length,
               itemBuilder: (context, index) {
-                // Mengambil data dari logData sesuai dengan index
-                var log = logData[index];
+                // Mengambil data dari filteredLogData sesuai dengan index
+                var log = filteredLogData[index];
                 int userId = int.tryParse(log['user_id'].toString()) ?? 0;
                 String username = getUsername(userId); // Ambil username berdasarkan user_id
                 return ListTile(
-                  title: Text(log['log_activity_type'] ?? ''),
+                  title: Text(log['log_description'] ?? ''),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

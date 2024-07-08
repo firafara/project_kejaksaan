@@ -357,12 +357,11 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
-
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  late String role;
+  // late String role;
 
-  void launchWhatsapp( String number, String message) async {
+  Future<void> launchWhatsapp({required String number, required String message}) async {
     final Uri uri = Uri(
       scheme: 'https',
       host: 'wa.me',
@@ -412,7 +411,12 @@ class _HomePageState extends State<HomePage> {
         );
         break;
       case 2:
-        _showListUser();
+        if (sessionManager.role == 'Admin') {
+         _showListUser();
+        } else {
+          _showRatingDialog();
+        }
+
         break;
       case 3:
         if (sessionManager.role == 'Admin') {
@@ -446,7 +450,6 @@ class _HomePageState extends State<HomePage> {
     if (hasSession) {
       setState(() {
         username = sessionManager.username;
-        role = sessionManager.role ?? 'defaultRole'; // Assign a default role if sessionManager.role is null
         print('Data session: $username');
       });
     } else {
@@ -583,30 +586,37 @@ class _HomePageState extends State<HomePage> {
         icon: Icon(Icons.person),
         label: 'Profile',
       ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.star),
-        label: 'Rating',
-      ),
-    ];
 
-    if (role == 'Admin') {
+    ];
+    if (sessionManager.role == 'User') {
+      items.add(
+        BottomNavigationBarItem(
+          icon: Icon(Icons.star),
+          label: 'Rating',
+        ),
+      );
+    }
+
+    if (sessionManager.role == 'Admin') {
       items.add(
         BottomNavigationBarItem(
           icon: Icon(Icons.people),
           label: 'Data User',
         ),
+      );
+      items.add(
         BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
-          ),
+          icon: Icon(Icons.history),
+          label: 'History',
+        ),
       );
     }
+
 
     // You can add more items here based on your requirements
 
     return items;
   }
-
   Widget buildImageCardLink(BuildContext context, String imagePath, url) {
     return GestureDetector(
       onTap: () async {
@@ -626,7 +636,7 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () async {
         await sendLog("IMAGE_CLICK", "whatsapp", number);
-        launchWhatsapp(number, message);
+        launchWhatsapp(number: number, message: message);
       },
       child: Image.asset(
         imagePath,
@@ -646,38 +656,52 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildCard(BuildContext context, String title) {
-    String imagePath;
-
+    IconData iconData;
     switch (title) {
       case "Pengaduan Pegawai":
-        imagePath = 'assets/images/rukum2.png';
+        iconData = Icons.work;
         break;
       case "JMS (Jaksa Masuk Sekolah)":
-        imagePath = 'assets/images/jms.png';
+        iconData = Icons.school;
         break;
       case "Pengaduan Tindak Pidana":
-        imagePath = 'assets/images/ptp.png';
+        iconData = Icons.gavel;
         break;
       case "Penyuluhan Hukum":
-        imagePath = 'assets/images/penkum.png'; // Example image path
+        iconData = Icons.lightbulb;
         break;
       case "Pengawasan Aliran & Kepercayaan":
-        imagePath = 'assets/images/pak.png';
+        iconData = Icons.waves;
         break;
       case "Posko Pilkada":
-        imagePath = 'assets/images/pp.png';
+        iconData = Icons.account_balance;
         break;
       default:
-        imagePath = 'assets/images/default.jpeg'; // Default image path
+        iconData = Icons.error;
     }
 
     return GestureDetector(
       onTap: () async {
         await sendLog("CARD_CLICK", "card", title);
-        if (title == "Pengaduan Pegawai") {
-          launchWhatsapp('6281371534130', 'Hello!');
-        } else {
-          navigateToPage(context, title);
+        switch (title) {
+          case "Pengaduan Pegawai":
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ListPengaduanPage()));
+            break;
+          case "JMS (Jaksa Masuk Sekolah)":
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ListJmsPage()));
+            break;
+          case "Pengaduan Tindak Pidana":
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ListPidanaPage()));
+            break;
+          case "Penyuluhan Hukum":
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ListPenyuluhanPage()));
+            break;
+          case "Pengawasan Aliran & Kepercayaan":
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ListAliranPage()));
+            break;
+          case "Posko Pilkada":
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ListPilkadaPage()));
+            break;
         }
       },
       child: Card(
@@ -686,12 +710,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imagePath,
-              height: 80,
-              width: 80,
-              fit: BoxFit.contain,
-            ),
+            Icon(iconData, size: 48.0),
             SizedBox(height: 8.0),
             Text(
               title,
@@ -703,6 +722,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
+}
 
   void navigateToPage(BuildContext context, String title) {
     switch (title) {
@@ -728,7 +750,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> sendLog(String method, String table, String description) async {
     final response = await http.post(
-      Uri.parse('http://192.168.1.7/kejaksaan/logapp.php'),
+      Uri.parse('http://192.168.31.53/kejaksaan/logapp.php'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -748,4 +770,4 @@ class _HomePageState extends State<HomePage> {
       print('Response body: ${response.body}');
     }
   }
-}
+

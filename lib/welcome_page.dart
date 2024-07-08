@@ -48,7 +48,7 @@ class _WelcomePageState extends State<WelcomePage> {
               children: [
                 Positioned.fill(
                   child: Image.asset(
-                    'assets/images/splashscreen.png', // Make sure this path matches your image asset
+                    'assets/images/kejati.png', // Make sure this path matches your image asset
                     fit: BoxFit.cover,
                   ),
                 ),
