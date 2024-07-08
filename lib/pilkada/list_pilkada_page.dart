@@ -593,35 +593,35 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
     }
   }
 
-  // void _handleStatusButtonPress(Datum pilkada) {
-  //   if (role == 'Admin') {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Approve Pengaduan?'),
-  //           content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(pilkada, 'Approved');
-  //               },
-  //               child: Text('Approve'),
-  //             ),
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(pilkada, 'Rejected');
-  //               },
-  //               child: Text('Reject'),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
+  void _handleStatusButtonPress(Datum pilkada) {
+    if (role == 'Admin') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Approve Pengaduan?'),
+            content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(pilkada, 'Approved');
+                },
+                child: Text('Approve'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(pilkada, 'Rejected');
+                },
+                child: Text('Reject'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   Future<void> _handleEdit(Datum pilkada) async {
     // Menunggu hasil dari EditAliranPage
@@ -813,7 +813,7 @@ class _ListPilkadaPageState extends State<ListPilkadaPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () => null,
+                                      onPressed: () =>_handleStatusButtonPress(pilkada),
                                       child: Text(
                                         pilkada.status,
                                         style: TextStyle(

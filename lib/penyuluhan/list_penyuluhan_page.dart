@@ -614,35 +614,35 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
     }
   }
 
-  // void _handleStatusButtonPress(Datum penyuluhan) {
-  //   if (role == 'Admin') {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Approve Penyuluhan?'),
-  //           content: Text('Apakah Anda ingin menyetujui penyuluhan ini?'),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(penyuluhan, 'Approved');
-  //               },
-  //               child: Text('Approve'),
-  //             ),
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(penyuluhan, 'Rejected');
-  //               },
-  //               child: Text('Reject'),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
+  void _handleStatusButtonPress(Datum penyuluhan) {
+    if (role == 'Admin') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Approve Penyuluhan?'),
+            content: Text('Apakah Anda ingin menyetujui penyuluhan ini?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(penyuluhan, 'Approved');
+                },
+                child: Text('Approve'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(penyuluhan, 'Rejected');
+                },
+                child: Text('Reject'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   Future<void> _handleEdit(Datum penyuluhan) async {
     // Menunggu hasil dari EditAliranPage
@@ -841,7 +841,7 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
                                   MainAxisAlignment.spaceBetween,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () => null,
+                                      onPressed: () => _handleStatusButtonPress(penyuluhan),
                                       child: Text(
                                         penyuluhan.status,
                                         style: TextStyle(

@@ -50,7 +50,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
 
   Future<void> _fetchJms() async {
     final response =
-    await http.get(Uri.parse('http://192.168.74.3/kejaksaan/jms.php'));
+    await http.get(Uri.parse('http://192.168.1.7/kejaksaan/jms.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       if (parsed['data'] != null) {
@@ -76,7 +76,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
 
   Future<void> _fetchUserData(String userId) async {
     final response = await http.get(
-        Uri.parse('http://192.168.74.3/kejaksaan/getUser.php?id=$userId'));
+        Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -116,7 +116,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   void _filterJmsList(String query) async {
     try {
       final response =
-      await http.get(Uri.parse('http://192.168.74.3/kejaksaan/jms.php'));
+      await http.get(Uri.parse('http://192.168.1.7/kejaksaan/jms.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData =
@@ -173,35 +173,35 @@ class _ListJmsPageState extends State<ListJmsPage> {
     }
   }
 
-  // void _handleStatusButtonPress(Datum jms) {
-  //   if (role == 'Admin') {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Approve Pengaduan?'),
-  //           content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(jms, 'Approved');
-  //               },
-  //               child: Text('Approve'),
-  //             ),
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 _saveStatus(jms, 'Rejected');
-  //               },
-  //               child: Text('Reject'),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
+  void _handleStatusButtonPress(Datum jms) {
+    if (role == 'Admin') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Approve Pengaduan?'),
+            content: Text('Apakah Anda ingin menyetujui pengaduan ini?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(jms, 'Approved');
+                },
+                child: Text('Approve'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveStatus(jms, 'Rejected');
+                },
+                child: Text('Reject'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   Future<void> _handleEdit(Datum jms) async {
     // Menunggu hasil dari EditAliranPage
@@ -408,7 +408,8 @@ class _ListJmsPageState extends State<ListJmsPage> {
                                   children: [
                                     ElevatedButton(
                                       onPressed: () =>
-                                      null,
+                                      // null,
+                                      _handleStatusButtonPress(jms),
                                       child: Text(
                                         jms.status,
                                         style: TextStyle(
