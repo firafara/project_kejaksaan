@@ -11,6 +11,7 @@ import 'package:project_kejaksaan/pilkada/list_pilkada_page.dart';
 import 'package:project_kejaksaan/user/list_user_page.dart';
 import 'package:project_kejaksaan/utils/session_manager.dart';
 import 'package:project_kejaksaan/rating_page.dart'; // Import RatingDialog
+import 'package:project_kejaksaan/Data_User/list_user.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,8 +22,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  late String role;
 
-  Future<void> launchWhatsapp({required String number, required String message}) async {
+  void launchWhatsapp( String number, String message) async {
     final Uri uri = Uri(
       scheme: 'https',
       host: 'wa.me',
@@ -72,15 +74,15 @@ class _HomePageState extends State<HomePage> {
         );
         break;
       case 2:
-        _showRatingDialog();
+        _showListUser();
         break;
     }
   }
 
-  void _showRatingDialog() {
+  void _showListUser() {
     showDialog(
       context: context,
-      builder: (context) => RatingDialog(),
+      builder: (context) => ListUserDataPage(),
     );
   }
 
@@ -91,6 +93,7 @@ class _HomePageState extends State<HomePage> {
     if (hasSession) {
       setState(() {
         username = sessionManager.username;
+        role = sessionManager.role ?? 'defaultRole'; // Assign a default role if sessionManager.role is null
         print('Data session: $username');
       });
     } else {
@@ -105,6 +108,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _isLoading = true;
+    getDataSession(); // Call getDataSession() in initState to initialize session data
   }
 
   @override
@@ -178,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: buildImageCardLink(context, 'assets/images/gambar4.jpeg', 'https://www.lapor.go.id/'),
-                )
+                ),
               ),
             ),
             SizedBox(height: 5),
@@ -211,22 +215,40 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.blue,
         showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: 'Rating',
-          ),
-        ],
+        items: buildBottomNavigationBarItems(), // Use a function to build items dynamically
       ),
     );
+  }
+
+  // Function to build bottom navigation items dynamically
+  List<BottomNavigationBarItem> buildBottomNavigationBarItems() {
+    List<BottomNavigationBarItem> items = [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.account_balance),
+        label: 'Home',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profile',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.star),
+        label: 'Rating',
+      ),
+    ];
+
+    if (role == 'Admin') {
+      items.add(
+        BottomNavigationBarItem(
+          icon: Icon(Icons.people),
+          label: 'Data User',
+        ),
+      );
+    }
+
+    // You can add more items here based on your requirements
+
+    return items;
   }
 
   Widget buildImageCardLink(BuildContext context, String imagePath, url) {
@@ -246,7 +268,7 @@ class _HomePageState extends State<HomePage> {
   Widget buildImageCard(BuildContext context, String imagePath, String number, String message) {
     return GestureDetector(
       onTap: () {
-        launchWhatsapp(number: number, message: message);
+        launchWhatsapp(number, message);
       },
       child: Image.asset(
         imagePath,
@@ -266,51 +288,37 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildCard(BuildContext context, String title) {
-    IconData iconData;
+    String imagePath;
+
     switch (title) {
       case "Pengaduan Pegawai":
-        iconData = Icons.work;
+        imagePath = 'assets/images/rukum2.png';
         break;
       case "JMS (Jaksa Masuk Sekolah)":
-        iconData = Icons.school;
+        imagePath = 'assets/images/jms.png';
         break;
       case "Pengaduan Tindak Pidana":
-        iconData = Icons.gavel;
+        imagePath = 'assets/images/ptp.png';
         break;
       case "Penyuluhan Hukum":
-        iconData = Icons.lightbulb;
+        imagePath = 'assets/images/penkum.png'; // Example image path
         break;
       case "Pengawasan Aliran & Kepercayaan":
-        iconData = Icons.waves;
+        imagePath = 'assets/images/pak.png';
         break;
       case "Posko Pilkada":
-        iconData = Icons.account_balance;
+        imagePath = 'assets/images/pp.png';
         break;
       default:
-        iconData = Icons.error;
+        imagePath = 'assets/images/default.jpeg'; // Default image path
     }
 
     return GestureDetector(
       onTap: () {
-        switch (title) {
-          case "Pengaduan Pegawai":
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ListPengaduanPage()));
-            break;
-          case "JMS (Jaksa Masuk Sekolah)":
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ListJmsPage()));
-            break;
-          case "Pengaduan Tindak Pidana":
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ListPidanaPage()));
-            break;
-          case "Penyuluhan Hukum":
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ListPenyuluhanPage()));
-            break;
-          case "Pengawasan Aliran & Kepercayaan":
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ListAliranPage()));
-            break;
-          case "Posko Pilkada":
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ListPilkadaPage()));
-            break;
+        if (title == "Pengaduan Pegawai") {
+          launchWhatsapp('6281371534130', 'Hello!');
+        } else {
+          navigateToPage(context, title);
         }
       },
       child: Card(
@@ -319,7 +327,12 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(iconData, size: 48.0),
+            Image.asset(
+              imagePath,
+              height: 80,
+              width: 80,
+              fit: BoxFit.contain,
+            ),
             SizedBox(height: 8.0),
             Text(
               title,
@@ -330,5 +343,27 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void navigateToPage(BuildContext context, String title) {
+    switch (title) {
+      case "JMS (Jaksa Masuk Sekolah)":
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ListJmsPage()));
+        break;
+      case "Pengaduan Tindak Pidana":
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ListPidanaPage()));
+        break;
+      case "Penyuluhan Hukum":
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ListPenyuluhanPage()));
+        break;
+      case "Pengawasan Aliran & Kepercayaan":
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ListAliranPage()));
+        break;
+      case "Posko Pilkada":
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ListPilkadaPage()));
+        break;
+      default:
+        break;
+    }
   }
 }

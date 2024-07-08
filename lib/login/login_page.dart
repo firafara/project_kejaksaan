@@ -331,7 +331,7 @@ class _LoginPageState extends State<LoginPage> {
       });
 
       http.Response res = await http.post(
-        Uri.parse('http://192.168.1.15/kejaksaan/login.php'),
+        Uri.parse('http://192.168.74.3/kejaksaan/login.php'),
         body: {
           "login": "1",
           "username": txtUsername.text,
@@ -412,7 +412,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: [
                     Image.asset(
-                      'assets/images/login.png',
+                      'assets/images/kejati.png',
                       width: 200,
                       height: 150,
                     ),

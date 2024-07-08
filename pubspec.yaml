@@ -46,6 +46,10 @@ dependencies:
   flutter_rating_bar: ^4.0.0 # Pastikan versinya sesuai yang terbaru
   flutter_pdfview: ^1.2.7
   url_launcher: ^6.0.17
+  excel: ^4.0.3
+  csv: ^6.0.0
+  open_file: ^3.1.2
+
   
 dev_dependencies:
   flutter_test:

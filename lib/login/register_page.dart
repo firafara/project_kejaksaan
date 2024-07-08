@@ -512,7 +512,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Column(
                   children: [
                     Image.asset(
-                      'assets/images/login.png',
+                      'assets/images/kejati.png',
                       width: 200,
                       height: 100,
                     ),

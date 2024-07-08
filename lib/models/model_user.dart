@@ -31,7 +31,7 @@ class ModelUsers {
   });
 
   factory ModelUsers.fromJson(Map<String, dynamic> json) => ModelUsers(
-    id: json["id"],
+    id: int.parse(json["id"]),
     username: json["username"],
     email: json["email"],
     fullname: json["fullname"],

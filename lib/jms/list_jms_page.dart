@@ -50,7 +50,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
 
   Future<void> _fetchJms() async {
     final response =
-    await http.get(Uri.parse('http://192.168.1.15/kejaksaan/jms.php'));
+    await http.get(Uri.parse('http://192.168.74.3/kejaksaan/jms.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       if (parsed['data'] != null) {
@@ -76,7 +76,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
 
   Future<void> _fetchUserData(String userId) async {
     final response = await http.get(
-        Uri.parse('http://192.168.1.15/kejaksaan/getUser.php?id=$userId'));
+        Uri.parse('http://192.168.74.3/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -116,7 +116,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   void _filterJmsList(String query) async {
     try {
       final response =
-      await http.get(Uri.parse('http://192.168.1.15/kejaksaan/jms.php'));
+      await http.get(Uri.parse('http://192.168.74.3/kejaksaan/jms.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData =
