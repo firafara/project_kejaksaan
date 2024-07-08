@@ -861,7 +861,7 @@ class _ListAliranPageState extends State<ListAliranPage> {
   // }
 
   Future<void> _fetchAliran() async {
-    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pengawasan.php'));
+    final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/pengawasan.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       if (parsed['data'] != null) {
@@ -881,7 +881,7 @@ class _ListAliranPageState extends State<ListAliranPage> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -919,7 +919,7 @@ class _ListAliranPageState extends State<ListAliranPage> {
 
   void _filterAliranList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pengawasan.php'));
+      final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/pengawasan.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -951,7 +951,7 @@ class _ListAliranPageState extends State<ListAliranPage> {
   Future<void> _saveStatus(Datum aliran, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.7/kejaksaan/updateStatusPengawasan.php'),
+        Uri.parse('http://192.168.1.11/kejaksaan/updateStatusPengawasan.php'),
         body: {
           'id': aliran.id,
           'status': status,
@@ -1020,7 +1020,7 @@ class _ListAliranPageState extends State<ListAliranPage> {
   Future<void> _handleDelete(Datum aliran) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.7/kejaksaan/deletepengawasan.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse('http://192.168.1.11/kejaksaan/deletepengawasan.php'), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': aliran.id,
         },

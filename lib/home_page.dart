@@ -750,7 +750,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> sendLog(String method, String table, String description) async {
     final response = await http.post(
-      Uri.parse('http://192.168.31.53/kejaksaan/logapp.php'),
+      Uri.parse('http://192.168.1.11/kejaksaan/logapp.php'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
