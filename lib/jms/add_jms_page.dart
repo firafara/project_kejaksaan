@@ -74,7 +74,7 @@ class _AddJmsPageState extends State<AddJmsPage> {
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi
         ..fields['status'] = 'Pending'
-        ..fields['nama_pelapor'] = _namaPemohonController.text
+        ..fields['nama_pemohon'] = _namaPemohonController.text
         ..fields['sekolah'] = _sekolahController.text
         ..fields['permohonan'] = _permohonanController.text;
 

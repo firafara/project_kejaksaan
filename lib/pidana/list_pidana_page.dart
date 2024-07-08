@@ -477,7 +477,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
     if (hasSession) {
       setState(() {
         username = sessionManager.username;
-        role = sessionManager.role;
+        role = sessionManager.role; // Simpan peran pengguna dari sesi
         userId = sessionManager.id; // Simpan user_id dari sesi
         print('Data session: $username');
       });
@@ -487,7 +487,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   }
 
   Future<void> _fetchPidana() async {
-    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pidana.php'));
+    final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/pidana.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       if (parsed['data'] != null) {
@@ -508,13 +508,13 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
-      print('Response for user $userId: $parsed');
+      print('Response for user $userId: $parsed'); // Print the response body to debug
 
       if (parsed['data'] != null && parsed['data'].isNotEmpty) {
-        final userDataMap = parsed['data'][0];
+        final userDataMap = parsed['data'][0]; // Assuming user data is returned as an array
         final userData = ModelUsers.fromJson(userDataMap);
 
         setState(() {
@@ -546,7 +546,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
 
   void _filterPidanaList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.7/kejaksaan/pidana.php'));
+      final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/pidana.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -578,7 +578,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   Future<void> _saveStatus(Datum pidana, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.7/kejaksaan/updateStatusPidana.php'),
+        Uri.parse('http://192.168.1.11/kejaksaan/updateStatusPidana.php'),
         body: {
           'id': pidana.id,
           'status': status,
@@ -646,7 +646,7 @@ class _ListPidanaPageState extends State<ListPidanaPage> {
   Future<void> _handleDelete(Datum pidana) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.7/kejaksaan/deletepidana.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse('http://192.168.1.11/kejaksaan/deletepidana.php'), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': pidana.id,
         },
