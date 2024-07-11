@@ -502,7 +502,7 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
   //   }
   // }
   Future<void> _fetchPenyuluhan() async {
-    final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/penyuluhan.php'));
+    final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/penyuluhan.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       if (parsed['data'] != null) {
@@ -524,7 +524,7 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
 
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -562,7 +562,7 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
 
   void _filterPenyuluhanList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/penyuluhan.php'));
+      final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/penyuluhan.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -594,7 +594,7 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
   Future<void> _saveStatus(Datum penyuluhan, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.11/kejaksaan/updateStatusPenyuluhan.php'),
+        Uri.parse('http://192.168.1.3/kejaksaan/updateStatusPenyuluhan.php'),
         body: {
           'id': penyuluhan.id,
           'status': status,
@@ -663,7 +663,7 @@ class _ListPenyuluhanPageState extends State<ListPenyuluhanPage> {
   Future<void> _handleDelete(Datum penyuluhan) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.11/kejaksaan/deletepenyuluhan.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse('http://192.168.1.3/kejaksaan/deletepenyuluhan.php'), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': penyuluhan.id,
         },

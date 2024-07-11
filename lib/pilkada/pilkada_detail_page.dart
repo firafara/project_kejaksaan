@@ -28,9 +28,9 @@ class _PilkadaDetailPageState extends State<PilkadaDetailPage> {
   Future<void> _downloadPdf(String type) async {
     String pdfUrl;
     if (type == 'laporan') {
-      pdfUrl = 'http://192.168.1.11/kejaksaan/${widget.pilkada.laporan_pengaduan_pdf}';
+      pdfUrl = 'http://192.168.1.3/kejaksaan/${widget.pilkada.laporan_pengaduan_pdf}';
     } else {
-      pdfUrl = 'http://192.168.1.11/kejaksaan/${widget.pilkada.ktp_pdf}';
+      pdfUrl = 'http://192.168.1.3/kejaksaan/${widget.pilkada.ktp_pdf}';
     }
 
     // Log the URL for debugging

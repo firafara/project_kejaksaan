@@ -331,7 +331,7 @@ class _LoginPageState extends State<LoginPage> {
       });
 
       http.Response res = await http.post(
-        Uri.parse('http://192.168.1.11/kejaksaan/login.php'),
+        Uri.parse('http://192.168.1.3/kejaksaan/login.php'),
         body: {
           "login": "1",
           "username": txtUsername.text,

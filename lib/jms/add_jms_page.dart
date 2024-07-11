@@ -35,7 +35,7 @@ class _AddJmsPageState extends State<AddJmsPage> {
 
   Future<void> getFullName(String userId) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/getUser?id=$userId'));
+      final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/getUser?id=$userId'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
@@ -69,7 +69,7 @@ class _AddJmsPageState extends State<AddJmsPage> {
     });
 
     try {
-      Uri uri = Uri.parse('http://192.168.1.11/kejaksaan/addjms.php');
+      Uri uri = Uri.parse('http://192.168.1.3/kejaksaan/addjms.php');
 
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi

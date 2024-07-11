@@ -1474,7 +1474,7 @@ class _HomePageState extends State<HomePage> {
         imagePath = 'assets/images/jms.png';
         break;
       case "Pengaduan Tindak Pidana":
-        imagePath = 'assets/images/ptp.png';
+        imagePath = 'assets/images/pidana.png';
         break;
       case "Penyuluhan Hukum":
         imagePath = 'assets/images/penkum.png';
@@ -1547,7 +1547,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> sendLog(String method, String table, String description) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.11/kejaksaan/logapp.php'),
+        Uri.parse('http://192.168.1.3/kejaksaan/logapp.php'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

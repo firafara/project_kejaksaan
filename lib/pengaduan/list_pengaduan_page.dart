@@ -68,7 +68,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
   // }
 
   Future<void> _fetchPengaduan() async {
-    final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/pengaduan.php'));
+    final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/pengaduan.php'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       if (parsed['data'] != null) {
@@ -89,7 +89,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/getUser.php?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed'); // Print the response body to debug
@@ -127,7 +127,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
 
   void _filterPengaduanList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.11/kejaksaan/pengaduan.php'));
+      final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/pengaduan.php'));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -159,7 +159,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
   Future<void> _saveStatus(Datum pengaduan, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.11/kejaksaan/updateStatusPengaduan.php'),
+        Uri.parse('http://192.168.1.3/kejaksaan/updateStatusPengaduan.php'),
         body: {
           'id': pengaduan.id,
           'status': status,
@@ -228,7 +228,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
   Future<void> _handleDelete(Datum pengaduan) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.7/kejaksaan/deletepengaduan.php'),
+        Uri.parse('http://192.168.1.3/kejaksaan/deletepengaduan.php'),
         body: {
           'id': pengaduan.id,
         },

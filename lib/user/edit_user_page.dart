@@ -89,7 +89,7 @@ class _EditUserPageState extends State<EditUserPage> {
     }
 
     try {
-      var url = Uri.parse('http://192.168.1.11/kejaksaan/updateUser.php');
+      var url = Uri.parse('http://192.168.1.3/kejaksaan/updateUser.php');
       var response = await http.post(url, body: {
         'id': widget.currentUser.id.toString(),
         'username': newUsername,

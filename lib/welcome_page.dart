@@ -105,16 +105,42 @@ class _WelcomePageState extends State<WelcomePage> {
             );
           },
           child: Center(
-            child: Stack(
-              alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Positioned.fill(
-                  child: Transform.scale(
-                    scale: 1.1, // Slightly zoom the image
-                    child: Image.asset(
-                      'assets/images/kejati.png',
-                      fit: BoxFit.contain,
-                    ),
+                Transform.scale(
+                  scale: 1.1, // Slightly zoom the image
+                  child: Image.asset(
+                    'assets/images/kejati-edit.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SizedBox(height: 10), // Reduced space between image and text
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'SISTEM INFORMASI KEJAKSAAN TINGGI SUMBAR',
+                        style: TextStyle(
+                          fontFamily: 'Mulish',
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '(SIKABAR)',
+                        style: TextStyle(
+                          fontFamily: 'Mulish',
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -125,4 +151,3 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 }
-

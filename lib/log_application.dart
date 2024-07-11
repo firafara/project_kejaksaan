@@ -31,7 +31,7 @@ class _LogApplicationState extends State<LogApplication> {
   }
 
   Future<void> fetchData() async {
-    final url = Uri.parse('http://192.168.1.11/kejaksaan/getLog.php'); // Ganti dengan URL API Anda
+    final url = Uri.parse('http://192.168.1.3/kejaksaan/getLog.php'); // Ganti dengan URL API Anda
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -62,7 +62,7 @@ class _LogApplicationState extends State<LogApplication> {
         continue;
       }
 
-      final userUrl = Uri.parse('http://192.168.1.11/kejaksaan/getUser.php?id=$userId'); // Ganti dengan URL API getUser.php
+      final userUrl = Uri.parse('http://192.168.1.3/kejaksaan/getUser.php?id=$userId'); // Ganti dengan URL API getUser.php
       try {
         final userResponse = await http.get(userUrl);
         if (userResponse.statusCode == 200) {
