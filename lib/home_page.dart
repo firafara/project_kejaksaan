@@ -1356,7 +1356,7 @@ class _HomePageState extends State<HomePage> {
                   buildCard(context, "Pengaduan Pegawai"),
                   buildCard(context, "JMS (Jaksa Masuk Sekolah)"),
                   buildCard(context, "Pengaduan Tindak Pidana"),
-                  buildCard(context, "Penyuluhan Hukum"),
+                  buildCard(context, "Penyuluhan & Penerangan Hukum"),
                   buildCard(context, "Pengawasan Aliran & Kepercayaan"),
                   buildCard(context, "Posko Pilkada"),
                 ],
@@ -1476,7 +1476,7 @@ class _HomePageState extends State<HomePage> {
       case "Pengaduan Tindak Pidana":
         imagePath = 'assets/images/pidana.png';
         break;
-      case "Penyuluhan Hukum":
+      case "Penyuluhan & Penerangan Hukum":
         imagePath = 'assets/images/penkum.png';
         break;
       case "Pengawasan Aliran & Kepercayaan":
@@ -1530,7 +1530,7 @@ class _HomePageState extends State<HomePage> {
       case "Pengaduan Tindak Pidana":
         Navigator.push(context, MaterialPageRoute(builder: (context) => ListPidanaPage()));
         break;
-      case "Penyuluhan Hukum":
+      case "Penyuluhan & Penerangan Hukum":
         Navigator.push(context, MaterialPageRoute(builder: (context) => ListPenyuluhanPage()));
         break;
       case "Pengawasan Aliran & Kepercayaan":
