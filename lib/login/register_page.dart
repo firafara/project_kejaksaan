@@ -4,7 +4,6 @@ import 'package:project_kejaksaan/login/login_page.dart';
 import 'package:project_kejaksaan/models/model_register.dart';
 import 'package:project_kejaksaan/Api/Api.dart';
 
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -190,9 +189,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(height: 10),
                     TextFormField(
-                      validator: (val) {
-                        return val!.isEmpty ? "Email cannot be empty" : null;
-                      },
                       controller: txtEmail,
                       style: TextStyle(
                         fontFamily: 'Mulish',

@@ -4,10 +4,29 @@ import 'package:project_kejaksaan/models/model_user.dart';
 import 'package:project_kejaksaan/user/edit_user_page.dart';
 import 'package:project_kejaksaan/user/tentang_kami_page.dart'; // Update with your model path
 
-class ListUserPage extends StatelessWidget {
+class ListUserPage extends StatefulWidget {
   final ModelUsers currentUser;
 
   ListUserPage({required this.currentUser});
+
+  @override
+  _ListUserPageState createState() => _ListUserPageState();
+}
+
+class _ListUserPageState extends State<ListUserPage> {
+  late ModelUsers currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUser = widget.currentUser;
+  }
+
+  void _updateUser(ModelUsers updatedUser) {
+    setState(() {
+      currentUser = updatedUser;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,12 +224,15 @@ class ListUserPage extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       InkWell(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          final updatedUser = await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => EditUserPage(currentUser: currentUser)),
                           );
+                          if (updatedUser != null) {
+                            _updateUser(updatedUser);
+                          }
                         },
                         child: Container(
                           height: 60,
@@ -346,7 +368,6 @@ class ListUserPage extends StatelessWidget {
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -358,109 +379,3 @@ class ListUserPage extends StatelessWidget {
     );
   }
 }
-// import 'package:flutter/material.dart';
-// import 'package:project_uts/models/model_user.dart';
-// import 'package:project_uts/user/edit_user_page.dart'; // Update with your model path
-//
-// class ListUserPage extends StatelessWidget {
-//   final ModelUsers currentUser;
-//
-//   ListUserPage({required this.currentUser});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(
-//           "Profile",
-//           style: TextStyle(
-//             fontSize: 18,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//       ),
-//       body: Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(20.0),
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               _buildUserInfo(Icons.person, currentUser.username),
-//               SizedBox(height: 10),
-//               _buildUserInfo(Icons.email, currentUser.email),
-//               SizedBox(height: 10),
-//               _buildUserInfo(Icons.person_outline, currentUser.fullname),
-//               SizedBox(height: 10),
-//               _buildUserInfo(Icons.phone, currentUser.phone_number),
-//               SizedBox(height: 20),
-//               _buildEditProfileButton(context),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildUserInfo(IconData icon, String text) {
-//     return Row(
-//       children: [
-//         Icon(
-//           icon,
-//           color: Colors.brown,
-//           size: 20,
-//         ),
-//         SizedBox(width: 10),
-//         Text(
-//           text,
-//           style: TextStyle(
-//             fontSize: 16,
-//             color: Colors.black,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-//
-//   Widget _buildEditProfileButton(BuildContext context) {
-//     return InkWell(
-//       onTap: () {
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//               builder: (context) => EditUserPage(currentUser: currentUser)),
-//         );
-//       },
-//       child: Container(
-//         height: 60,
-//         decoration: BoxDecoration(
-//           color: Colors.brown,
-//           borderRadius: BorderRadius.circular(30),
-//         ),
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Padding(
-//               padding: const EdgeInsets.only(left: 20),
-//               child: Text(
-//                 'Edit Profile',
-//                 style: TextStyle(
-//                   fontSize: 16,
-//                   fontWeight: FontWeight.bold,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//             ),
-//             Padding(
-//               padding: const EdgeInsets.only(right: 20),
-//               child: Icon(
-//                 Icons.arrow_forward,
-//                 color: Colors.white,
-//                 size: 24,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:project_kejaksaan/models/model_user.dart';
-import 'package:project_kejaksaan/user/list_user_page.dart'; // Update with your model path
 import 'package:http/http.dart' as http;
 import 'package:project_kejaksaan/Api/Api.dart';
 
@@ -78,15 +77,17 @@ class _EditUserPageState extends State<EditUserPage> {
   }
 
   void saveChanges(String newUsername, String newFullName, String newEmail, String newPhoneNumber, String newKtp, String newAlamat, String newRole) async {
-    if (newUsername.isEmpty || newFullName.isEmpty || newEmail.isEmpty || newPhoneNumber.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('All fields are required')));
+    if (newUsername.isEmpty || newFullName.isEmpty || newPhoneNumber.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Username, Full Name, and Phone Number are required')));
       return;
     }
 
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(newEmail)) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid email format')));
-      return;
+    if (newEmail.isNotEmpty) {
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      if (!emailRegex.hasMatch(newEmail)) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid email format')));
+        return;
+      }
     }
 
     try {
@@ -311,10 +312,6 @@ class _EditUserPageState extends State<EditUserPage> {
                   });
                 },
                 items: [
-                  DropdownMenuItem<String>(
-                    value: 'Admin',
-                    child: Text('Admin'),
-                  ),
                   DropdownMenuItem<String>(
                     value: 'User',
                     child: Text('User'),
