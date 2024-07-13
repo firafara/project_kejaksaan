@@ -8,6 +8,7 @@ import 'package:project_kejaksaan/models/model_add_pengaduan.dart'; // Menggunak
 import 'package:project_kejaksaan/pengaduan/list_pengaduan_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:project_kejaksaan/utils/session_manager.dart';
+import 'package:project_kejaksaan/Api/Api.dart';
 
 class AddPengaduanPage extends StatefulWidget {
   const AddPengaduanPage({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _AddPengaduanPageState extends State<AddPengaduanPage> {
 
   Future<void> getFullName(String userId) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/getUser?id=$userId'));
+      final response = await http.get(Uri.parse(Api.GetUser + '?id=$userId'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
@@ -186,7 +187,7 @@ class _AddPengaduanPageState extends State<AddPengaduanPage> {
     });
 
     try {
-      Uri uri = Uri.parse('http://192.168.1.3/kejaksaan/addpengaduan.php');
+      Uri uri = Uri.parse(Api.AddPengaduan);
 
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi

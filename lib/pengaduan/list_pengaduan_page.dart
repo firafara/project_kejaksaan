@@ -8,6 +8,7 @@ import 'package:project_kejaksaan/models/model_user.dart';
 import 'package:project_kejaksaan/pengaduan/add_pengaduan_page.dart';
 import 'package:project_kejaksaan/pengaduan/edit_pengaduan_page.dart';
 import 'package:project_kejaksaan/pengaduan/pengaduan_detail_page.dart';
+import 'package:project_kejaksaan/Api/Api.dart';
 import 'package:project_kejaksaan/utils/session_manager.dart';
 
 class ListPengaduanPage extends StatefulWidget {
@@ -49,26 +50,8 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
     }
   }
 
-  // Future<void> _fetchPengaduan() async {
-  //   final response = await http.get(Uri.parse('http://192.168.31.53/kejaksaan/pengaduan.php'));
-  //   if (response.statusCode == 200) {
-  //     final parsed = jsonDecode(response.body);
-  //     setState(() {
-  //       _pengaduanList = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
-  //       _filterPengaduanByRole();
-  //       _isLoading = false;
-  //     });
-  //
-  //     for (var pengaduan in _pengaduanList) {
-  //       await _fetchUserData(pengaduan.user_id);
-  //     }
-  //   } else {
-  //     throw Exception('Failed to load pengaduan');
-  //   }
-  // }
-
   Future<void> _fetchPengaduan() async {
-    final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/pengaduan.php'));
+    final response = await http.get(Uri.parse(Api.Pengaduan));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       if (parsed['data'] != null) {
@@ -89,7 +72,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/getUser.php?id=$userId'));
+    final response = await http.get(Uri.parse(Api.GetUser + '?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed'); // Print the response body to debug
@@ -127,7 +110,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
 
   void _filterPengaduanList(String query) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/pengaduan.php'));
+      final response = await http.get(Uri.parse(Api.Pengaduan));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData = List<Datum>.from(parsed['data'].map((x) => Datum.fromJson(x)));
@@ -159,7 +142,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
   Future<void> _saveStatus(Datum pengaduan, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.3/kejaksaan/updateStatusPengaduan.php'),
+        Uri.parse(Api.UpdateStatusPengaduan),
         body: {
           'id': pengaduan.id,
           'status': status,
@@ -228,7 +211,7 @@ class _ListPengaduanPageState extends State<ListPengaduanPage> {
   Future<void> _handleDelete(Datum pengaduan) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.3/kejaksaan/deletepengaduan.php'),
+        Uri.parse(Api.DeletePengaduan),
         body: {
           'id': pengaduan.id,
         },

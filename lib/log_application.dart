@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:project_kejaksaan/Api/Api.dart';
 import 'dart:convert';
 
 class LogApplication extends StatefulWidget {
@@ -31,7 +32,7 @@ class _LogApplicationState extends State<LogApplication> {
   }
 
   Future<void> fetchData() async {
-    final url = Uri.parse('http://192.168.1.3/kejaksaan/getLog.php'); // Ganti dengan URL API Anda
+    final url = Uri.parse(Api.GetLog); // Ganti dengan URL API Anda
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -62,7 +63,7 @@ class _LogApplicationState extends State<LogApplication> {
         continue;
       }
 
-      final userUrl = Uri.parse('http://192.168.1.3/kejaksaan/getUser.php?id=$userId'); // Ganti dengan URL API getUser.php
+      final userUrl = Uri.parse(Api.GetUser + '?id=$userId'); // Ganti dengan URL API getUser.php
       try {
         final userResponse = await http.get(userUrl);
         if (userResponse.statusCode == 200) {

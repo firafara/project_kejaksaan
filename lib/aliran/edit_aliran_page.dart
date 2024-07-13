@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:project_kejaksaan/models/model_aliran.dart';
+import 'package:project_kejaksaan/Api/Api.dart';
+
 
 class EditAliranPage extends StatefulWidget {
   final Datum aliran;
@@ -59,7 +61,7 @@ class _EditAliranPageState extends State<EditAliranPage> {
       });
 
       try {
-        Uri uri = Uri.parse('http://192.168.1.3/kejaksaan/editpengawasan.php');
+        Uri uri = Uri.parse(Api.EditPengawasan);
 
         http.MultipartRequest request = http.MultipartRequest('POST', uri)
           ..fields['id'] = widget.aliran.id

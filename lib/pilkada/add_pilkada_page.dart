@@ -11,6 +11,7 @@ import 'package:project_kejaksaan/pengaduan/list_pengaduan_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:project_kejaksaan/pilkada/list_pilkada_page.dart';
 import 'package:project_kejaksaan/utils/session_manager.dart';
+import 'package:project_kejaksaan/Api/Api.dart';
 
 class AddPilkadaPage extends StatefulWidget {
   const AddPilkadaPage({super.key});
@@ -40,7 +41,7 @@ class _AddPilkadaPageState extends State<AddPilkadaPage> {
 
   Future<void> getFullName(String userId) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/getUser?id=$userId'));
+      final response = await http.get(Uri.parse(Api.GetUser + '?id=$userId'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
@@ -189,7 +190,7 @@ class _AddPilkadaPageState extends State<AddPilkadaPage> {
     });
 
     try {
-      Uri uri = Uri.parse('http://192.168.1.3/kejaksaan/addpilkada.php');
+      Uri uri = Uri.parse(Api.AddPilkada);
 
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi

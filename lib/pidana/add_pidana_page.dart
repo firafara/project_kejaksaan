@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:project_kejaksaan/models/model_add_pidana.dart';
 import 'package:project_kejaksaan/pidana/list_pidana_page.dart';
 import 'package:project_kejaksaan/utils/session_manager.dart';
+import 'package:project_kejaksaan/Api/Api.dart';
 
 class AddPidanaPage extends StatefulWidget {
   const AddPidanaPage({super.key});
@@ -38,7 +39,7 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
 
   Future<void> getFullName(String userId) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/getUser?id=$userId'));
+      final response = await http.get(Uri.parse(Api.GetUser + '?id=$userId'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
@@ -81,85 +82,6 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
     }
   }
 
-  // Future<void> addPengaduan() async {
-  //   if (_userIdController.text.isEmpty ||
-  //       _laporanPengaduanPdfPath.isEmpty ||
-  //       _ktpPdfPath.isEmpty ||
-  //       _laporanPengaduanController.text.isEmpty ||
-  //       _statusController.text.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Semua field harus diisi')),
-  //     );
-  //     return;
-  //   }
-  //
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //
-  //   try {
-  //     Uri uri = Uri.parse('http://192.168.1.8/kejaksaan/addpengaduan.php');
-  //
-  //     http.MultipartRequest request = http.MultipartRequest('POST', uri)
-  //       ..fields['user_id'] = _userIdController.text
-  //       ..fields['laporan_pengaduan'] = _laporanPengaduanController.text
-  //       ..fields['status'] = _statusController.text;
-  //
-  //     if (_laporanPengaduanPdfPath.isNotEmpty) {
-  //       request.files.add(
-  //         await http.MultipartFile.fromPath(
-  //           'laporan_pengaduan_pdf',
-  //           _laporanPengaduanPdfPath,
-  //           contentType: MediaType('application', 'pdf'), // Ubah tipe konten sesuai dengan yang diperlukan
-  //         ),
-  //       );
-  //     }
-  //
-  //     if (_ktpPdfPath.isNotEmpty) {
-  //       request.files.add(
-  //         await http.MultipartFile.fromPath(
-  //           'ktp_pdf',
-  //           _ktpPdfPath,
-  //           contentType: MediaType('application', 'pdf'), // Ubah tipe konten sesuai dengan yang diperlukan
-  //         ),
-  //       );
-  //     }
-  //
-  //     http.StreamedResponse response = await request.send();
-  //     String responseBody = await response.stream.bytesToString();
-  //     print("Server response: $responseBody"); // Ini akan mencetak body respons
-  //
-  //     if (response.statusCode == 200) {
-  //       try {
-  //         ModelAddPengaduan data = modelAddPengaduanFromJson(responseBody);
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text('${data.message}')),
-  //         );
-  //         if (data.isSuccess) {
-  //           Navigator.pushAndRemoveUntil(
-  //             context,
-  //             MaterialPageRoute(builder: (context) => ListPengaduanPage()),
-  //                 (route) => false,
-  //           );
-  //         }
-  //       } catch (e) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text('Failed to parse response: $e')),
-  //         );
-  //       }
-  //     } else {
-  //       throw Exception('Failed to upload data, status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('An error occurred: $e')),
-  //     );
-  //   } finally {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
   Future<void> addPengaduan() async {
     String userId = sessionManager.id ?? ''; // Get the user ID from the session manager
     print('User ID: $userId');
@@ -187,7 +109,7 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
     });
 
     try {
-      Uri uri = Uri.parse('http://192.168.1.3/kejaksaan/addpidana.php');
+      Uri uri = Uri.parse(Api.AddPidana);
 
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi
@@ -293,31 +215,6 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // TextField(
-            //   style: TextStyle(
-            //     fontFamily: 'Mulish',
-            //   ),
-            //   decoration: InputDecoration(
-            //     filled: true,
-            //     fillColor: Colors.white,
-            //     hintText: "Id User",
-            //     prefixIcon: Icon(Icons.person, color: Color(0xFF545454)),
-            //     border: OutlineInputBorder(
-            //       borderRadius: BorderRadius.circular(8.0),
-            //       borderSide: BorderSide.none,
-            //     ),
-            //     contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-            //   ),
-            //   controller: _userIdController,
-            // ),
-            // SizedBox(height: 20),
-            // Text(
-            //   'Fullname: $_fullname', // Tampilkan fullname di sini
-            //   style: TextStyle(
-            //     fontFamily: 'Mulish',
-            //     color: Colors.white,
-            //   ),
-            // ),
             TextField(
               style: TextStyle(
                 fontFamily: 'Mulish',

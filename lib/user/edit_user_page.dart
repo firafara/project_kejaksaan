@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project_kejaksaan/models/model_user.dart';
 import 'package:project_kejaksaan/user/list_user_page.dart'; // Update with your model path
 import 'package:http/http.dart' as http;
+import 'package:project_kejaksaan/Api/Api.dart';
 
 class EditUserPage extends StatefulWidget {
   final ModelUsers currentUser;
@@ -89,7 +90,7 @@ class _EditUserPageState extends State<EditUserPage> {
     }
 
     try {
-      var url = Uri.parse('http://192.168.1.3/kejaksaan/updateUser.php');
+      var url = Uri.parse(Api.UpdateUser);
       var response = await http.post(url, body: {
         'id': widget.currentUser.id.toString(),
         'username': newUsername,
@@ -315,8 +316,8 @@ class _EditUserPageState extends State<EditUserPage> {
                     child: Text('Admin'),
                   ),
                   DropdownMenuItem<String>(
-                    value: 'Customer',
-                    child: Text('Customer'),
+                    value: 'User',
+                    child: Text('User'),
                   ),
                 ],
               ),

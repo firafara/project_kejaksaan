@@ -8,6 +8,8 @@ import 'package:project_kejaksaan/login/login_page.dart';
 import 'package:project_kejaksaan/models/model_user.dart';
 import 'package:project_kejaksaan/utils/session_manager.dart';
 import '../models/model_jms.dart';
+import 'package:project_kejaksaan/Api/Api.dart';
+
 
 class ListJmsPage extends StatefulWidget {
   const ListJmsPage({super.key});
@@ -50,7 +52,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
 
   Future<void> _fetchJms() async {
     final response =
-    await http.get(Uri.parse('http://192.168.1.3/kejaksaan/jms.php'));
+    await http.get(Uri.parse(Api.JMS));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       if (parsed['data'] != null) {
@@ -76,7 +78,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
 
   Future<void> _fetchUserData(String userId) async {
     final response = await http.get(
-        Uri.parse('http://192.168.1.3/kejaksaan/getUser.php?id=$userId'));
+        Uri.parse(Api.GetUser + '?id=$userId'));
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
       print('Response for user $userId: $parsed');
@@ -116,7 +118,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   void _filterJmsList(String query) async {
     try {
       final response =
-      await http.get(Uri.parse('http://192.168.1.3/kejaksaan/jms.php'));
+      await http.get(Uri.parse(Api.JMS));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         List<Datum> allData =
@@ -153,7 +155,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   Future<void> _saveStatus(Datum jms, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.3/kejaksaan/updateStatusJms.php'),
+        Uri.parse(Api.UpdateStatusJMS),
         body: {
           'id': jms.id,
           'status': status,
@@ -220,8 +222,7 @@ class _ListJmsPageState extends State<ListJmsPage> {
   Future<void> _handleDelete(Datum jms) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://192.168.1.3/kejaksaan/deletejms.php'), // Sesuaikan dengan URL endpoint untuk hapus data
+        Uri.parse(Api.DeleteJMS), // Sesuaikan dengan URL endpoint untuk hapus data
         body: {
           'id': jms.id,
         },

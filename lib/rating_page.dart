@@ -3,6 +3,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_kejaksaan/utils/session_manager.dart';
 import 'dart:convert';
+import 'package:project_kejaksaan/Api/Api.dart';
+
 
 class RatingDialog extends StatefulWidget {
   @override
@@ -23,7 +25,7 @@ class _RatingDialogState extends State<RatingDialog> {
     String namaPelapor = sessionManager.username!;
 
     final response = await http.post(
-      Uri.parse('http://192.168.1.3/kejaksaan/addrating.php'), // Ganti dengan URL API yang benar
+      Uri.parse(Api.AddRating), // Ganti dengan URL API yang benar
       body: {
         'user_id': userId,
         'rating': _rating.toStringAsFixed(0), // Mengonversi nilai double menjadi string tanpa desimal

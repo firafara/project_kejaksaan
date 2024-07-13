@@ -10,6 +10,8 @@ import 'package:project_kejaksaan/utils/session_manager.dart';
 import 'package:project_kejaksaan/home_page.dart';
 import 'package:project_kejaksaan/login/login_page.dart';
 import 'package:open_file/open_file.dart';
+import 'package:project_kejaksaan/Api/Api.dart';
+
 
 class ListUserDataPage extends StatefulWidget {
   const ListUserDataPage({Key? key}) : super(key: key);
@@ -99,7 +101,7 @@ class _ListUserDataPageState extends State<ListUserDataPage> {
 
   Future<void> _fetchUser() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/user.php'));
+      final response = await http.get(Uri.parse(Api.User));
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         if (parsed['data'] != null) {
@@ -260,12 +262,6 @@ class _ListUserDataPageState extends State<ListUserDataPage> {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _exportToCsv,
-      //   backgroundColor: Colors.green,
-      //   tooltip: 'Export to CSV',
-      //   child: Icon(Icons.download),
-      // ),
     );
   }
 

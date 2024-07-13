@@ -10,6 +10,7 @@ import 'package:project_kejaksaan/models/model_add_aliran.dart';
 import 'package:project_kejaksaan/pengaduan/list_pengaduan_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:project_kejaksaan/utils/session_manager.dart';
+import 'package:project_kejaksaan/Api/Api.dart';
 
 class AddAliranPage extends StatefulWidget {
   const AddAliranPage({super.key});
@@ -39,7 +40,7 @@ class _AddAliranPageState extends State<AddAliranPage> {
 
   Future<void> getFullName(String userId) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.3/kejaksaan/getUser?id=$userId'));
+      final response = await http.get(Uri.parse(Api.GetUser + '?id=$userId'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
@@ -82,85 +83,6 @@ class _AddAliranPageState extends State<AddAliranPage> {
     }
   }
 
-  // Future<void> addPengaduan() async {
-  //   if (_userIdController.text.isEmpty ||
-  //       _laporanPengaduanPdfPath.isEmpty ||
-  //       _ktpPdfPath.isEmpty ||
-  //       _laporanPengaduanController.text.isEmpty ||
-  //       _statusController.text.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Semua field harus diisi')),
-  //     );
-  //     return;
-  //   }
-  //
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //
-  //   try {
-  //     Uri uri = Uri.parse('http://192.168.1.7/kejaksaan/addpengaduan.php');
-  //
-  //     http.MultipartRequest request = http.MultipartRequest('POST', uri)
-  //       ..fields['user_id'] = _userIdController.text
-  //       ..fields['laporan_pengaduan'] = _laporanPengaduanController.text
-  //       ..fields['status'] = _statusController.text;
-  //
-  //     if (_laporanPengaduanPdfPath.isNotEmpty) {
-  //       request.files.add(
-  //         await http.MultipartFile.fromPath(
-  //           'laporan_pengaduan_pdf',
-  //           _laporanPengaduanPdfPath,
-  //           contentType: MediaType('application', 'pdf'), // Ubah tipe konten sesuai dengan yang diperlukan
-  //         ),
-  //       );
-  //     }
-  //
-  //     if (_ktpPdfPath.isNotEmpty) {
-  //       request.files.add(
-  //         await http.MultipartFile.fromPath(
-  //           'ktp_pdf',
-  //           _ktpPdfPath,
-  //           contentType: MediaType('application', 'pdf'), // Ubah tipe konten sesuai dengan yang diperlukan
-  //         ),
-  //       );
-  //     }
-  //
-  //     http.StreamedResponse response = await request.send();
-  //     String responseBody = await response.stream.bytesToString();
-  //     print("Server response: $responseBody"); // Ini akan mencetak body respons
-  //
-  //     if (response.statusCode == 200) {
-  //       try {
-  //         ModelAddPengaduan data = modelAddPengaduanFromJson(responseBody);
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text('${data.message}')),
-  //         );
-  //         if (data.isSuccess) {
-  //           Navigator.pushAndRemoveUntil(
-  //             context,
-  //             MaterialPageRoute(builder: (context) => ListPengaduanPage()),
-  //                 (route) => false,
-  //           );
-  //         }
-  //       } catch (e) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text('Failed to parse response: $e')),
-  //         );
-  //       }
-  //     } else {
-  //       throw Exception('Failed to upload data, status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('An error occurred: $e')),
-  //     );
-  //   } finally {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
   Future<void> addPengaduan() async {
     String userId = sessionManager.id ?? ''; // Get the user ID from the session manager
     print('User ID: $userId');
@@ -188,7 +110,7 @@ class _AddAliranPageState extends State<AddAliranPage> {
     });
 
     try {
-      Uri uri = Uri.parse('http://192.168.1.3/kejaksaan/addpengawasan.php');
+      Uri uri = Uri.parse(Api.AddPengawasan);
 
       http.MultipartRequest request = http.MultipartRequest('POST', uri)
         ..fields['user_id'] = userId // Gunakan user ID yang diambil dari sesi
