@@ -3,7 +3,10 @@ description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/kejati.png"
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
@@ -49,8 +52,8 @@ dependencies:
   excel: ^4.0.3
   csv: ^6.0.0
   open_file: ^3.1.2
+  flutter_launcher_icons: ^0.13.1
 
-  
 dev_dependencies:
   flutter_test:
     sdk: flutter
