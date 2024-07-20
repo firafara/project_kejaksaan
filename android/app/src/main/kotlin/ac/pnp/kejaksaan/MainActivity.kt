@@ -1,4 +1,4 @@
-package com.example.project_kejaksaan
+package ac.pnp.kejaksaan
 
 import io.flutter.embedding.android.FlutterActivity
 
