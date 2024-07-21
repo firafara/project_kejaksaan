@@ -222,61 +222,117 @@ class _ListUserPageState extends State<ListUserPage> {
                           ),
                         ],
                       ),
+                      // SizedBox(height: 20),
+                      // InkWell(
+                      //   onTap: () async {
+                      //     final updatedUser = await Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => EditUserPage(currentUser: currentUser)),
+                      //     );
+                      //     if (updatedUser != null) {
+                      //       _updateUser(updatedUser);
+                      //     }
+                      //   },
+                      //   child: Container(
+                      //     height: 60,
+                      //     decoration: BoxDecoration(
+                      //       color: Color(0xFF275D20),
+                      //       borderRadius: BorderRadius.circular(30),
+                      //     ),
+                      //     child: Stack(
+                      //       alignment: Alignment.center,
+                      //       children: <Widget>[
+                      //         Align(
+                      //           alignment: Alignment.center,
+                      //           child: Text(
+                      //             'Edit Profile',
+                      //             textAlign: TextAlign.center,
+                      //             style: TextStyle(
+                      //               fontSize: 16,
+                      //               fontWeight: FontWeight.bold,
+                      //               color: Colors.white,
+                      //               fontFamily: 'Jost',
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         Positioned(
+                      //           right: 16,
+                      //           child: Container(
+                      //             decoration: BoxDecoration(
+                      //               shape: BoxShape.circle,
+                      //               color: Colors.white,
+                      //             ),
+                      //             child: Padding(
+                      //               padding: const EdgeInsets.all(10),
+                      //               child: Icon(
+                      //                 Icons.arrow_forward,
+                      //                 color: Color(0xFF275D20),
+                      //                 size: 24,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(height: 20),
-                      InkWell(
-                        onTap: () async {
-                          final updatedUser = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditUserPage(currentUser: currentUser)),
-                          );
-                          if (updatedUser != null) {
-                            _updateUser(updatedUser);
-                          }
-                        },
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF275D20),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Edit Profile',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontFamily: 'Jost',
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                right: 16,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Icon(
-                                      Icons.arrow_forward,
-                                      color: Color(0xFF275D20),
-                                      size: 24,
+                      if (currentUser.role != 'Admin')
+                        InkWell(
+                          onTap: () async {
+                            final updatedUser = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditUserPage(currentUser: currentUser)),
+                            );
+                            if (updatedUser != null) {
+                              _updateUser(updatedUser);
+                            }
+                          },
+                          child: Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF275D20),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Edit Profile',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontFamily: 'Jost',
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                Positioned(
+                                  right: 16,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Icon(
+                                        Icons.arrow_forward,
+                                        color: Color(0xFF275D20),
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
                       SizedBox(height: 20),
                       InkWell(
                         onTap: () {
