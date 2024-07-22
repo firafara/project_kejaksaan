@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project_kejaksaan/welcome_page.dart';
-import 'package:project_kejaksaan/home_page.dart';
-import 'package:change_app_package_name/change_app_package_name.dart';
 
 void main() {
+  // Be sure to add this line if `PackageInfo.fromPlatform()` is called before runApp()
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
