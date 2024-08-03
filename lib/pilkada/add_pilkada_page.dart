@@ -431,18 +431,18 @@ class _AddPilkadaPageState extends State<AddPilkadaPage> {
                   ),
                   contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Icon(Icons.picture_as_pdf),
-                      SizedBox(width: 10),
-                      Text(_ktpPdfPath.isNotEmpty ? _ktpPdfPath.split('/').last : 'Pilih file PDF'),
-                    ],
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Icon(Icons.picture_as_pdf),
+                        SizedBox(width: 10),
+                        Text(_ktpPdfPath.isNotEmpty ? _ktpPdfPath.split('/').last : 'Pilih file PDF'),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
             SizedBox(height: 25),
             InkWell(
               onTap: addPengaduan, // Panggil addPengaduan saat tombol ditekan
