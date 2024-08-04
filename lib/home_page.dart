@@ -13,7 +13,7 @@ import 'package:project_kejaksaan/pengaduan/list_pengaduan_page.dart';
 import 'package:project_kejaksaan/pilkada/list_pilkada_page.dart';
 import 'package:project_kejaksaan/user/list_user_page.dart';
 import 'package:project_kejaksaan/utils/session_manager.dart';
-import 'package:project_kejaksaan/rating_page.dart'; // Import RatingDialog
+import 'package:project_kejaksaan/rating_page.dart'; 
 import 'package:project_kejaksaan/Data_User/list_user.dart';
 import 'package:project_kejaksaan/Api/Api.dart';
 
@@ -43,27 +43,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-
-  void launchWhatsapp(String number, String message) async {
-    final Uri uri = Uri(
-      scheme: 'https',
-      host: 'wa.me',
-      path: number,
-      queryParameters: {
-        'text': message,
-      },
-    );
-
-    try {
-    if (await canLaunch(uri.toString())) {
-      await launch(uri.toString());
-    } else {
-      print("Can't launch WhatsApp");
-      }
-    } catch (e) {
-      print("Error launching WhatsApp: $e");
-    }
-  }
 
   void _onItemTapped(int index) {
     if (_selectedIndex != index) {
@@ -188,22 +167,12 @@ class _HomePageState extends State<HomePage> {
                 physics: NeverScrollableScrollPhysics(),
                 children: [
                   buildImageCardLink(context, 'assets/images/gambar5.jpeg', 'https://halojpn.id/sites/'),
-                  // buildImageCard(context, 'assets/images/gambar1.jpeg', '6281371534130', 'Hello!'),
                   buildImageCardLink(context, 'assets/images/gambar3.jpeg', 'https://docs.google.com/forms/d/e/1FAIpQLSdplUq-eYLAF73CMDNvVJhdlO10q4Z4CL-kLuavs1muYxpe0Q/viewform'),
                   buildImageCardLink(context, 'assets/images/gambar2.jpeg', 'https://docs.google.com/forms/d/e/1FAIpQLSdplUq-eYLAF73CMDNvVJhdlO10q4Z4CL-kLuavs1muYxpe0Q/viewform'),
                   buildImageCardLink(context, 'assets/images/gambar4.jpeg', 'https://www.lapor.go.id/'),
                 ],
               ),
             ),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0),
-            //   child: Center(
-            //     child: Container(
-            //       width: MediaQuery.of(context).size.width * 0.7,
-            //       child: buildImageCardLink(context, 'assets/images/gambar4.jpeg', 'https://www.lapor.go.id/'),
-            //     ),
-            //   ),
-            // ),
             SizedBox(height: 5),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0),
@@ -215,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  // buildCard(context, "Pengaduan Pegawai"),
+                  buildCard(context, "Pengaduan Pegawai"),
                   buildCard(context, "JMS (Jaksa Masuk Sekolah)"),
                   buildCard(context, "Pengaduan Tindak Pidana"),
                   buildCard(context, "Penyuluhan & Penerangan Hukum"),
@@ -292,21 +261,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildImageCard(BuildContext context, String imagePath, String number, String message) {
-    return GestureDetector(
-      onTap: () async {
-        await sendLog("IMAGE_CLICK", "whatsapp", number);
-        launchWhatsapp(number, message);
-      },
-      child: Image.asset(
-        imagePath,
-        fit: BoxFit.fill,
-        height: 120,
-        alignment: Alignment.center,
-      ),
-    );
-  }
-
   void _launchURL(String url) async {
     try {
       if (await canLaunch(url)) {
@@ -323,9 +277,9 @@ class _HomePageState extends State<HomePage> {
     String imagePath;
 
     switch (title) {
-      // case "Pengaduan Pegawai":
-      //   imagePath = 'assets/images/rukum2.png';
-      //   break;
+      case "Pengaduan Pegawai":
+        imagePath = 'assets/images/rukum2.png';
+        break;
       case "JMS (Jaksa Masuk Sekolah)":
         imagePath = 'assets/images/jms.png';
         break;
@@ -348,11 +302,7 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () async {
         await sendLog("CARD_CLICK", "card", title);
-        // if (title == "Pengaduan Pegawai") {
-        //   launchWhatsapp('6281371530402', 'Hello!');
-        // } else {
           navigateToPage(context, title);
-        // }
       },
       child: Card(
         elevation: 2.0,
@@ -380,6 +330,9 @@ class _HomePageState extends State<HomePage> {
 
   void navigateToPage(BuildContext context, String title) {
     switch (title) {
+      case "Pengaduan Pegawai":
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ListPengaduanPage()));
+        break;
       case "JMS (Jaksa Masuk Sekolah)":
         Navigator.push(context, MaterialPageRoute(builder: (context) => ListJmsPage()));
         break;
