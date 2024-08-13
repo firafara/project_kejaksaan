@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:project_kejaksaan/home_page.dart';
 import 'package:project_kejaksaan/login/register_page.dart';
 import 'package:project_kejaksaan/Api/Api.dart';
@@ -22,6 +24,44 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isLoading = false;
   bool _isPasswordVisible = false;
+
+  Future<void> _requestPermissions() async {
+    final plugin = DeviceInfoPlugin();
+    final android = await plugin.androidInfo;
+    // Meminta izin untuk membaca penyimpanan
+
+    final storageStatus = android.version.sdkInt < 33
+        ? await Permission.storage.request()
+        : PermissionStatus.granted;
+
+    if (storageStatus == PermissionStatus.granted) {
+      print("granted");
+    }
+    if (storageStatus == PermissionStatus.denied) {
+      print("denied");
+    }
+    if (storageStatus == PermissionStatus.permanentlyDenied) {
+      openAppSettings();
+    }
+
+    // Meminta izin untuk mengakses kamera
+    PermissionStatus cameraStatus = await Permission.camera.request();
+
+    // Mengecek status dari masing-masing permission
+    if (storageStatus.isGranted && cameraStatus.isGranted) {
+      // Semua permission diberikan
+      print("Semua izin telah diberikan.");
+    } else {
+      // Salah satu atau beberapa permission tidak diberikan
+      print("Beberapa izin tidak diberikan.");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _requestPermissions();
+  }
 
   Future<void> loginAccount() async {
     try {
@@ -162,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                         fillColor: Colors.white,
                         hintText: "Username",
                         prefixIcon:
-                        Icon(Icons.person, color: Color(0xFF545454)),
+                            Icon(Icons.person, color: Color(0xFF545454)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                           borderSide: BorderSide.none,
@@ -185,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                         fillColor: Colors.white,
                         hintText: "Password",
                         prefixIcon:
-                        Icon(Icons.lock_outline, color: Color(0xFF545454)),
+                            Icon(Icons.lock_outline, color: Color(0xFF545454)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                           borderSide: BorderSide.none,

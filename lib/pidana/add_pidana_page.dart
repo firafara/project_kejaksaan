@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
@@ -20,10 +21,14 @@ class AddPidanaPage extends StatefulWidget {
 class _AddPidanaPageState extends State<AddPidanaPage> {
   TextEditingController _userIdController = TextEditingController();
   TextEditingController _laporanPengaduanController = TextEditingController();
-  TextEditingController _namaPelaporController = TextEditingController(); // Add controller for nama_pelapor
-  TextEditingController _ktpController = TextEditingController(); // Add controller for ktp
-  TextEditingController _noHpController = TextEditingController(); // Add controller for no_hp
-  TextEditingController _uraianController = TextEditingController(); // Add controller for no_hp
+  TextEditingController _namaPelaporController =
+      TextEditingController(); // Add controller for nama_pelapor
+  TextEditingController _ktpController =
+      TextEditingController(); // Add controller for ktp
+  TextEditingController _noHpController =
+      TextEditingController(); // Add controller for no_hp
+  TextEditingController _uraianController =
+      TextEditingController(); // Add controller for no_hp
 
   String _fullname = ''; // Tambahkan variabel untuk menyimpan fullname
 
@@ -33,7 +38,13 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
   bool isLoading = false;
 
   Future<bool> requestPermissions() async {
-    var status = await Permission.storage.request();
+    final plugin = DeviceInfoPlugin();
+    final android = await plugin.androidInfo;
+    // Meminta izin untuk membaca penyimpanan
+
+    final status = android.version.sdkInt < 33
+        ? await Permission.storage.request()
+        : PermissionStatus.granted;
     return status.isGranted;
   }
 
@@ -52,9 +63,11 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
       print('Error: $e');
     }
   }
+
   Future<void> selectFileLaporanPengaduan() async {
     if (await requestPermissions()) {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any); // Ubah menjadi FileType.any
+      FilePickerResult? result = await FilePicker.platform
+          .pickFiles(type: FileType.any); // Ubah menjadi FileType.any
       if (result != null && result.files.single.path != null) {
         setState(() {
           _laporanPengaduanPdfPath = result.files.single.path!;
@@ -69,7 +82,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
 
   Future<void> selectFileKtp() async {
     if (await requestPermissions()) {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any); // Ubah menjadi FileType.any
+      FilePickerResult? result = await FilePicker.platform
+          .pickFiles(type: FileType.any); // Ubah menjadi FileType.any
       if (result != null && result.files.single.path != null) {
         setState(() {
           _ktpPdfPath = result.files.single.path!;
@@ -83,7 +97,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
   }
 
   Future<void> addPengaduan() async {
-    String userId = sessionManager.id ?? ''; // Get the user ID from the session manager
+    String userId =
+        sessionManager.id ?? ''; // Get the user ID from the session manager
     print('User ID: $userId');
     print('Nama Pelapor: ${_namaPelaporController.text}');
     print('KTP: ${_ktpController.text}');
@@ -97,7 +112,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
         _laporanPengaduanController.text.isEmpty ||
         _namaPelaporController.text.isEmpty || // Check if nama_pelapor is empty
         _ktpController.text.isEmpty || // Check if ktp is empty
-        _noHpController.text.isEmpty) { // Check if no_hp is empty
+        _noHpController.text.isEmpty) {
+      // Check if no_hp is empty
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Semua field harus diisi')),
       );
@@ -120,13 +136,13 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
         ..fields['no_hp'] = _noHpController.text
         ..fields['uraian'] = _uraianController.text;
 
-
       if (_laporanPengaduanPdfPath.isNotEmpty) {
         request.files.add(
           await http.MultipartFile.fromPath(
             'laporan_pengaduan_pdf',
             _laporanPengaduanPdfPath,
-            contentType: MediaType('application', 'pdf'), // Ubah tipe konten sesuai dengan PDF
+            contentType: MediaType(
+                'application', 'pdf'), // Ubah tipe konten sesuai dengan PDF
           ),
         );
       }
@@ -136,7 +152,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
           await http.MultipartFile.fromPath(
             'ktp_pdf',
             _ktpPdfPath,
-            contentType: MediaType('application', 'pdf'), // Ubah tipe konten sesuai dengan PDF
+            contentType: MediaType(
+                'application', 'pdf'), // Ubah tipe konten sesuai dengan PDF
           ),
         );
       }
@@ -163,7 +180,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
           );
         }
       } else {
-        throw Exception('Failed to upload data, status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to upload data, status code: ${response.statusCode}');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -176,8 +194,6 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
     }
   }
 
-
-
   @override
   void initState() {
     super.initState();
@@ -186,11 +202,13 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
       getFullName(_userIdController.text);
     });
   }
+
   @override
   void dispose() {
     _userIdController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -228,7 +246,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               controller: _namaPelaporController,
             ),
@@ -246,7 +265,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               controller: _ktpController,
             ),
@@ -264,7 +284,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               controller: _noHpController,
             ),
@@ -280,7 +301,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 ),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -288,7 +310,9 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
                     children: [
                       Icon(Icons.picture_as_pdf),
                       SizedBox(width: 10),
-                      Text(_laporanPengaduanPdfPath.isNotEmpty ? _laporanPengaduanPdfPath.split('/').last : 'Pilih file PDF'),
+                      Text(_laporanPengaduanPdfPath.isNotEmpty
+                          ? _laporanPengaduanPdfPath.split('/').last
+                          : 'Pilih file PDF'),
                     ],
                   ),
                 ),
@@ -308,7 +332,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               controller: _laporanPengaduanController,
             ),
@@ -326,7 +351,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               controller: _uraianController,
             ),
@@ -342,7 +368,8 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 ),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -350,7 +377,9 @@ class _AddPidanaPageState extends State<AddPidanaPage> {
                     children: [
                       Icon(Icons.picture_as_pdf),
                       SizedBox(width: 10),
-                      Text(_ktpPdfPath.isNotEmpty ? _ktpPdfPath.split('/').last : 'Pilih file PDF'),
+                      Text(_ktpPdfPath.isNotEmpty
+                          ? _ktpPdfPath.split('/').last
+                          : 'Pilih file PDF'),
                     ],
                   ),
                 ),

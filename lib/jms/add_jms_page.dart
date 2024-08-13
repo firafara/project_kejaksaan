@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
@@ -11,7 +12,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:project_kejaksaan/utils/session_manager.dart';
 import 'package:project_kejaksaan/Api/Api.dart';
 
-
 class AddJmsPage extends StatefulWidget {
   const AddJmsPage({super.key});
 
@@ -21,17 +21,25 @@ class AddJmsPage extends StatefulWidget {
 
 class _AddJmsPageState extends State<AddJmsPage> {
   TextEditingController _userIdController = TextEditingController();
-  TextEditingController _namaPemohonController = TextEditingController(); // Add controller for nama_pelapor
-  TextEditingController _sekolahController = TextEditingController(); // Add controller for no_hp
-  TextEditingController _permohonanController = TextEditingController(); // Add controller for no_hp
-
+  TextEditingController _namaPemohonController =
+      TextEditingController(); // Add controller for nama_pelapor
+  TextEditingController _sekolahController =
+      TextEditingController(); // Add controller for no_hp
+  TextEditingController _permohonanController =
+      TextEditingController(); // Add controller for no_hp
 
   String _fullname = ''; // Tambahkan variabel untuk menyimpan fullname
 
   bool isLoading = false;
 
   Future<bool> requestPermissions() async {
-    var status = await Permission.storage.request();
+    final plugin = DeviceInfoPlugin();
+    final android = await plugin.androidInfo;
+    // Meminta izin untuk membaca penyimpanan
+
+    final status = android.version.sdkInt < 33
+        ? await Permission.storage.request()
+        : PermissionStatus.granted;
     return status.isGranted;
   }
 
@@ -52,14 +60,18 @@ class _AddJmsPageState extends State<AddJmsPage> {
   }
 
   Future<void> addPengaduan() async {
-    String userId = sessionManager.id ?? ''; // Get the user ID from the session manager
+    String userId =
+        sessionManager.id ?? ''; // Get the user ID from the session manager
     print('User ID: $userId');
     print('Nama Pemohon: ${_namaPemohonController.text}');
     print('Sekolah: ${_sekolahController.text}');
     print('Permohonan: ${_permohonanController.text}');
 
     // Check if other required fields are empty
-    if (userId.isEmpty || _namaPemohonController.text.isEmpty || _sekolahController.text.isEmpty || _permohonanController.text.isEmpty) {
+    if (userId.isEmpty ||
+        _namaPemohonController.text.isEmpty ||
+        _sekolahController.text.isEmpty ||
+        _permohonanController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Semua field harus diisi')),
       );
@@ -102,7 +114,8 @@ class _AddJmsPageState extends State<AddJmsPage> {
           );
         }
       } else {
-        throw Exception('Failed to upload data, status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to upload data, status code: ${response.statusCode}');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -115,9 +128,6 @@ class _AddJmsPageState extends State<AddJmsPage> {
     }
   }
 
-
-
-
   @override
   void initState() {
     super.initState();
@@ -126,11 +136,13 @@ class _AddJmsPageState extends State<AddJmsPage> {
       getFullName(_userIdController.text);
     });
   }
+
   @override
   void dispose() {
     _userIdController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -193,7 +205,8 @@ class _AddJmsPageState extends State<AddJmsPage> {
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               controller: _namaPemohonController,
             ),
@@ -211,7 +224,8 @@ class _AddJmsPageState extends State<AddJmsPage> {
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               controller: _sekolahController,
             ),
@@ -224,12 +238,15 @@ class _AddJmsPageState extends State<AddJmsPage> {
                 filled: true,
                 fillColor: Colors.white,
                 hintText: "Permohonan",
-                prefixIcon: Icon(Icons.file_copy_sharp, color: Color(0xFF545454)), // Mengubah ikon menjadi ikon file
+                prefixIcon: Icon(Icons.file_copy_sharp,
+                    color:
+                        Color(0xFF545454)), // Mengubah ikon menjadi ikon file
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               maxLines: null, // Atau jumlah baris yang diinginkan
               controller: _permohonanController,
@@ -286,4 +303,3 @@ class _AddJmsPageState extends State<AddJmsPage> {
     );
   }
 }
-
