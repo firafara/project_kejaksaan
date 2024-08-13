@@ -37,7 +37,7 @@ class _EditJmsPageState extends State<EditJmsPage> {
         isLoading = true;  // Atur isLoading menjadi true saat proses dimulai
       });
       try {
-        Uri uri = Uri.parse('http://192.168.1.11/kejaksaan/editjms.php');
+        Uri uri = Uri.parse('https://umkm-pnp.com/api-kejaksaan/editjms.php');
 
         http.MultipartRequest request = http.MultipartRequest('POST', uri)
           ..fields['id'] = widget.jms.id

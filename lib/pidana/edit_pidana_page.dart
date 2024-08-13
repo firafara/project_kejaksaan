@@ -62,7 +62,7 @@ class _EditPidanaPageState extends State<EditPidanaPage> {
       });
 
       try {
-        Uri uri = Uri.parse('http://192.168.1.11/kejaksaan/editpidana.php');
+        Uri uri = Uri.parse('https://umkm-pnp.com/api-kejaksaan/editpidana.php');
 
         http.MultipartRequest request = http.MultipartRequest('POST', uri)
           ..fields['id'] = widget.pidana.id

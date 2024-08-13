@@ -58,7 +58,7 @@ class _EditPilkadaPageState extends State<EditPilkadaPage> {
         isLoading = true;  // Atur isLoading menjadi true saat proses dimulai
       });
       try {
-        Uri uri = Uri.parse('http://192.168.1.11/kejaksaan/editpilkada.php');
+        Uri uri = Uri.parse('https://umkm-pnp.com/api-kejaksaan/editpilkada.php');
 
         http.MultipartRequest request = http.MultipartRequest('POST', uri)
           ..fields['id'] = widget.pilkada.id

@@ -58,7 +58,7 @@ class _EditPengaduanPageState extends State<EditPengaduanPage> {
         isLoading = true;  // Atur isLoading menjadi true saat proses dimulai
       });
       try {
-        Uri uri = Uri.parse('http://192.168.1.11/kejaksaan/editpengaduan.php');
+        Uri uri = Uri.parse('https://umkm-pnp.com/api-kejaksaan/editpengaduan.php');
 
         http.MultipartRequest request = http.MultipartRequest('POST', uri)
           ..fields['id'] = widget.pengaduan.id
