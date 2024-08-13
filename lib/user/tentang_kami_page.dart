@@ -48,7 +48,7 @@ class _TentangKamiState extends State<TentangKami> {
                   child: Column(
                     children: [
                       Text(
-                        "SIKABAR",
+                        "APLIKASI SIKABAR",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20,
@@ -58,7 +58,7 @@ class _TentangKamiState extends State<TentangKami> {
                       ),
                       SizedBox(height: 20), // Add some space between the title and the description
                       Text(
-                        "Layanan Sistem Informasi Kejaksaan Tinggi Sumatera Barat (SI-KABAR), yang memuat semua layanan yang ada di Kejaksaan Tinggi Sumbar yang bisa dimanfaatkan oleh masyarakat umum khususnya masyarakat Sumatera Barat.",
+                        "Aplikasi Sikabar merupakan sebuah aplikasi yang memberikan layanan Sistem Informasi tentang Kejaksaan Tinggi  (SI-KABAR), yang memuat semua layanan yang ada di Kejaksaan Tinggi  yang bisa dimanfaatkan oleh masyarakat umum khususnya masyarakat Sumatera Barat.",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,

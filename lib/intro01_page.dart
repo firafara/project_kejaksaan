@@ -16,7 +16,7 @@ class Intro01 extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Tegakkan Keadilan Bersama Aplikasi Kejaksaan Sumbar",
+                  "Tegakkan Keadilan Bersama Aplikasi Sikabar",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Jost',

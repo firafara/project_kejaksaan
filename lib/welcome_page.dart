@@ -121,7 +121,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   child: Column(
                     children: [
                       Text(
-                        'SISTEM INFORMASI KEJAKSAAN TINGGI SUMBAR',
+                        'Aplikasi Sikabar',
                         style: TextStyle(
                           fontFamily: 'Mulish',
                           color: Colors.black,
@@ -131,7 +131,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        '(SIKABAR)',
+                        '(SIKABAR Apps)',
                         style: TextStyle(
                           fontFamily: 'Mulish',
                           color: Colors.black,

@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pusat Informasi',
+      title: 'Aplikasi Sikabar',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Pusat Informasi",
+          "Aplikasi Sikabar",
           style: TextStyle(fontFamily: 'Jost', fontSize: 18, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Color(0xFF5BB04B),
