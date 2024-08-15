@@ -15,14 +15,17 @@ class Intro01 extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Tegakkan Keadilan Bersama Aplikasi Sikabar",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Jost',
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Tegakkan Keadilan Bersama Aplikasi Sikabar",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Jost',
+                      fontSize: 26,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 SizedBox(height: 10),
