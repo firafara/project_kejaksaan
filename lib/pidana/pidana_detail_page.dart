@@ -28,9 +28,9 @@ class _PidanaDetailPageState extends State<PidanaDetailPage> {
   Future<void> _downloadPdf(String type) async {
     String pdfUrl;
     if (type == 'laporan') {
-      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/kejaksaan/${widget.pidana.laporan_pengaduan_pdf}';
+      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/${widget.pidana.laporan_pengaduan_pdf}';
     } else {
-      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/kejaksaan/${widget.pidana.ktp_pdf}';
+      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/${widget.pidana.ktp_pdf}';
     }
 
     // Log the URL for debugging

@@ -28,9 +28,9 @@ class _PenyuluhanDetailPageState extends State<PenyuluhanDetailPage> {
   Future<void> _downloadPdf(String type) async {
     String pdfUrl;
     if (type == 'laporan') {
-      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/kejaksaan/${widget.penyuluhan.bentuk_permasalahan_pdf}';
+      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/${widget.penyuluhan.bentuk_permasalahan_pdf}';
     } else {
-      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/kejaksaan/${widget.penyuluhan.ktp_pdf}';
+      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/${widget.penyuluhan.ktp_pdf}';
     }
 
     // Log the URL for debugging

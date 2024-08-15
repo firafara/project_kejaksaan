@@ -28,7 +28,7 @@ class _PengaduanDetailPageState extends State<PengaduanDetailPage> {
   Future<void> _downloadPdf(String type) async {
     String pdfUrl;
     if (type == 'laporan') {
-      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/kejaksaan/${widget.pengaduan.laporan_pengaduan_pdf}';
+      pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/${widget.pengaduan.laporan_pengaduan_pdf}';
     } else {
       pdfUrl = 'https://umkm-pnp.com/api-kejaksaan/${widget.pengaduan.ktp_pdf}';
     }

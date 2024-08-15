@@ -131,7 +131,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        '(SIKABAR Apps)',
+                        'Solusi Inovatif untuk Pelayanan Hukum',
                         style: TextStyle(
                           fontFamily: 'Mulish',
                           color: Colors.black,
